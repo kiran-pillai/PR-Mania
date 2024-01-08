@@ -1,0 +1,13 @@
+services:
+  ui:
+    build: ./fe
+    ports:
+      - '3000:3001'
+    container_name: pr_mania-ui
+    restart: always
+  api:
+    build: ./api
+    ports:
+      - '8000:8000'
+    container_name: pr_mania-api
+    restart: always
