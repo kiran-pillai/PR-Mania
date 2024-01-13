@@ -1,11 +1,21 @@
+networks:
+  pr:
+    driver: bridge
+    name: pr
+
 services:
-  ui:
+  pr_mania-ui:
+    networks:
+      - pr
     build: ./fe
     ports:
-      - '3000:3001'
+      - '3000:3000'
     container_name: pr_mania-ui
     restart: always
-  api:
+
+  pr_mania-api:
+    networks:
+      - pr
     build: ./api
     ports:
       - '8000:8000'
