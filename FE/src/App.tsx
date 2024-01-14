@@ -13,7 +13,7 @@ function App() {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        return response.json(); // or response.json() if the server responds with JSON
+        return response.text(); // or response.json() if the server responds with JSON
       })
       .then((data) => {
         // Printing the response data to the screen
