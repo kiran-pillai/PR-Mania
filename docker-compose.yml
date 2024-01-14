@@ -12,6 +12,9 @@ services:
       - '3000:3001'
     container_name: pr_mania-ui
     restart: always
+    volumes:
+      - ./fe:/app
+      - /app/node_modules
 
   pr_mania-api:
     networks:
