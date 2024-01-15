@@ -28,7 +28,7 @@ wss.on('connection', (ws, req) => {
     console.log('received message', msg?.toString());
     wss.clients.forEach((client) => {
       //ws!==client -> don't send to person who sent
-      if (ws !== client && client.readyState === WebSocket.OPEN) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(msg, { binary: isBinary });
       }
     });

@@ -46,7 +46,6 @@ function App() {
     // Clean up function
     return () => {
       webSocket.current.close();
-      console.log('hit the clean up');
     };
   }, []);
 
