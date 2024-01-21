@@ -4,12 +4,23 @@ networks:
     name: pr
 
 services:
+  pr_data-store:
+    networks:
+      - pr
+    container_name: pr_data-store
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '27012:27017'
+
   pr_mania-ui:
     networks:
       - pr
     build: ./fe
     ports:
       - '3000:3001'
+    image: pr_mania-ui
     container_name: pr_mania-ui
     restart: always
     volumes:
@@ -20,6 +31,7 @@ services:
     networks:
       - pr
     build: ./api
+    image: pr_mania-api
     ports:
       - '8000:8000'
     container_name: pr_mania-api

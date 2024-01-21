@@ -1,5 +1,6 @@
 import express from 'express';
 import { WebSocketServer, WebSocket } from 'ws';
+import { connect } from './middleware/db';
 let app = express();
 
 let port = 8000;
@@ -10,6 +11,7 @@ app.get('/', (req: any, res: any) => {
 });
 
 const s = app.listen(port, () => {
+  connect();
   console.log(`Example app listening on port ${port}`);
 });
 
