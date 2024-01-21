@@ -1,6 +1,8 @@
 import express from 'express';
 import { WebSocketServer, WebSocket } from 'ws';
 import { connect } from './middleware/db';
+import { User } from './models/users';
+import { hash, compare } from 'bcrypt';
 let app = express();
 
 let port = 8000;
@@ -10,8 +12,16 @@ app.get('/', (req: any, res: any) => {
   res.send('Hello World!');
 });
 
-const s = app.listen(port, () => {
+const s = app.listen(port, async () => {
   connect();
+  let password = '123abc';
+  let queriedPassword = await User.findOne({ username: 'Kiran' });
+  // let hashedPassword = await hash(password, 10);
+  // let sam = new User({ username: 'Kiran', password: hashedPassword });
+  // sam.save().then(() => console.log('Saved!'));
+  let isEqual = await compare(password, queriedPassword['password']);
+  console.log({ isEqual });
+
   console.log(`Example app listening on port ${port}`);
 });
 
