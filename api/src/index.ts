@@ -7,7 +7,7 @@ let port = 8000;
 
 app.get('/', (req: any, res: any) => {
   res.set('Access-Control-Allow-Origin', '*');
-  res.send('Hello World 2!');
+  res.send('Hello World!');
 });
 
 const s = app.listen(port, () => {
