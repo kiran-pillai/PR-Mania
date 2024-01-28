@@ -1,29 +1,25 @@
 import express from 'express';
 import { WebSocketServer, WebSocket } from 'ws';
-import { connect } from './middleware/db';
-import { User } from './models/users';
+import { connectToMongo } from './middleware/db';
+import { User } from './models/models';
 import { hash, compare } from 'bcrypt';
+import routes from './routes/index';
+import cors from 'cors';
 let app = express();
 
 let port = 8000;
 
+app.use(cors());
+app.use(express.json());
+app.use('/', routes);
 app.get('/', (req: any, res: any) => {
-  res.set('Access-Control-Allow-Origin', '*');
   res.send('Hello World!');
 });
 
-const s = app.listen(port, async () => {
-  connect();
-  let password = '123abc';
-  let queriedPassword = await User.findOne({ username: 'Kiran' });
-  // let hashedPassword = await hash(password, 10);
-  // let sam = new User({ username: 'Kiran', password: hashedPassword });
-  // sam.save().then(() => console.log('Saved!'));
-  let isEqual = await compare(password, queriedPassword['password']);
-  console.log({ isEqual });
+connectToMongo();
 
-  console.log(`Example app listening on port ${port}`);
-});
+const s = app.listen(port, async () => {});
+app.use('/', routes);
 
 const wss = new WebSocketServer({ noServer: true });
 

@@ -9,15 +9,16 @@ import {
   PaperProps,
   Button,
   Divider,
-  Checkbox,
   Anchor,
   Stack,
 } from '@mantine/core';
+import { urlToURI } from '../urlHandler';
 // import { GoogleButton } from './GoogleButton';
 // import { TwitterButton } from './TwitterButton';
 
 const Login = (props: PaperProps) => {
   const [type, toggle] = useToggle(['login', 'register']);
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -34,6 +35,31 @@ const Login = (props: PaperProps) => {
     },
   });
 
+  const handleRegister = async () => {
+    const response = await fetch(
+      urlToURI(type === 'register' ? 'register' : 'login'),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: form.values.email,
+          password: form.values.password,
+          name: form.values.name,
+        }),
+      }
+    );
+    if (response.ok) {
+      console.log('success');
+      form.reset();
+
+      // history.push('/login');
+    } else {
+      console.log('error');
+    }
+  };
+
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
       <Text size="lg" fw={500}>
@@ -47,7 +73,7 @@ const Login = (props: PaperProps) => {
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => handleRegister())}>
         <Stack>
           {type === 'register' && (
             <TextInput
