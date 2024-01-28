@@ -23,9 +23,6 @@ services:
     image: pr_mania-ui
     container_name: pr_mania-ui
     restart: always
-    volumes:
-      - ./fe:/app
-      - /app/node_modules
 
   pr_mania-api:
     networks:

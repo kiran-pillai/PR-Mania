@@ -8,21 +8,10 @@ live_update=[
     restart_container()
 ])
 
-# docker_build('pr_mania-ui','fe',
-# live_update=[
-#     sync('./fe/src','/app/src'),
-#     sync('./fe/public','/app/public'),
-#     run('npm install', trigger='./fe/package.json'),
-#     restart_container()
-# ])
-# dc_resource(
-#         "pr_mania-api",
-#         trigger_mode=TRIGGER_MODE_AUTO,
-#         labels=["backend"],
-# )
-dc_resource(
-        "pr_mania-ui",
-        trigger_mode=TRIGGER_MODE_AUTO,
-        labels=["ui"],
-        resource_deps=["pr_mania-api"],
-    )
+docker_build('pr_mania-ui','fe',
+live_update=[
+    sync('./fe/src','/app/src'),
+    sync('./fe/public','/app/public'),
+    sync('./fe/vite.config.ts','/app/vite.config.ts'),
+    run('npm install', trigger='./fe/package.json'),
+])
