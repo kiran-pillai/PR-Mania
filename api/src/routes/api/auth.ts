@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { User } from '../../models/models';
-import { compare, hash } from 'bcrypt';
-
+import { hash } from 'bcrypt';
+import jwt from 'jsonwebtoken';
 const router = Router();
 
 router.get('/', (req, res) => {
@@ -15,13 +15,13 @@ router.post('/register', async (req, res) => {
     let hashedPassword = await hash(password, 10);
     let user = new User({ ...formData, password: hashedPassword });
     await user.save();
-    res.status(201).send('User registered successfully');
+    return res.status(201).send('User registered successfully');
   } catch (err: unknown) {
     if (err instanceof Error && err.name === 'ValidationError') {
       return res.status(400).send(err.message);
     }
-    res.status(500).send('Internal Server Error');
     console.error('ERROR', err);
+    return res.status(500).send('Internal Server Error');
   }
 });
 
@@ -32,14 +32,25 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(400).send("User doesn't exist");
     }
-    let isMatch = await compare(password, user['password']);
+    let isMatch = password === user['password'];
     if (!isMatch) {
       return res.status(400).send('Invalid Password');
     }
+    const secret: any = process.env.SECRET_KEY;
+    const token = jwt.sign({ email, name: user.name }, secret, {
+      expiresIn: '1h',
+    });
+    res.cookie('token', token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 3600000),
+      path: '/',
+      sameSite: 'none',
+      secure: true,
+    });
     res.status(200).send('Login Successful');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    return res.status(500).send('Internal Server Error');
   }
 });
 export default router;

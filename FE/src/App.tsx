@@ -12,11 +12,10 @@ declare module '@tanstack/react-router' {
   }
 }
 function App() {
-  const [count, setCount] = useState(0);
   const [data, setData] = useState('');
 
-  useEffect(() => {
-    fetch('http://localhost:8000/')
+  function getHelloWorld() {
+    fetch('https://localhost:8000/', { credentials: 'include' })
       .then((response) => {
         // Checking if the response is successful
         if (!response.ok) {
@@ -35,12 +34,16 @@ function App() {
           error
         );
       });
+  }
+  useEffect(() => {
+    getHelloWorld();
   }, []);
 
   return (
     <>
       <h2>Server says {data}</h2>
       <Login />
+      <button onClick={getHelloWorld}>Send a req</button>
     </>
   );
 }

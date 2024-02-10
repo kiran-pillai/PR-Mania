@@ -1,24 +1,38 @@
 import express from 'express';
 import { WebSocketServer, WebSocket } from 'ws';
 import { connectToMongo } from './middleware/db';
-import { User } from './models/models';
-import { hash, compare } from 'bcrypt';
 import routes from './routes/index';
 import cors from 'cors';
-let app = express();
+import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
 
+dotenv.config();
+let app = express();
 let port = 8000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use('/', routes);
 app.get('/', (req: any, res: any) => {
   res.send('Hello World!');
 });
 
+const sslOptions = {
+  key: fs.readFileSync(path.join(__dirname, 'localhost.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'localhost.crt')),
+};
+
 connectToMongo();
 
-const s = app.listen(port, async () => {});
+// const s = app.listen(port, async () => {});
+const s = https.createServer(sslOptions, app).listen(port, async () => {});
 app.use('/', routes);
 
 const wss = new WebSocketServer({ noServer: true });
