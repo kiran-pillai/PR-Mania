@@ -37,20 +37,40 @@ router.post('/login', async (req, res) => {
       return res.status(400).send('Invalid Password');
     }
     const secret: any = process.env.SECRET_KEY;
-    const token = jwt.sign({ email, name: user.name }, secret, {
+    const accessToken = jwt.sign({ email, name: user.name }, secret, {
+      expiresIn: 5,
+    });
+    const refreshToken = jwt.sign({ email, name: user.name }, secret, {
       expiresIn: '1h',
     });
-    res.cookie('token', token, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 3600000),
-      path: '/',
-      sameSite: 'none',
-      secure: true,
-    });
-    res.status(200).send('Login Successful');
+    return res.status(200).send({ accessToken, refreshToken });
   } catch (err) {
     console.error(err);
     return res.status(500).send('Internal Server Error');
   }
 });
+
+router.get('/logout', (req, res) => {
+  return res.status(200).send('Logged out');
+});
+
+router.post('/refresh', (req, res) => {
+  let refreshToken = req.body.refreshToken;
+  if (!refreshToken) return res.status(401).send('No token');
+  const secret: any = process.env.SECRET_KEY;
+  let decoded: any;
+  try {
+    decoded = jwt.verify(refreshToken, secret);
+  } catch (err: unknown) {
+    console.error('error with decoding payload', err);
+    return res.status(500).send('Internal Server Error');
+  }
+  let accessToken = jwt.sign(
+    { email: decoded?.email, name: decoded?.name },
+    secret,
+    { expiresIn: 60 }
+  );
+  return res.status(200).send({ accessToken });
+});
+
 export default router;

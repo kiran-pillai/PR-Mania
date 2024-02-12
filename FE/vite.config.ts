@@ -6,10 +6,6 @@ import { TanStackRouterVite } from '@tanstack/router-vite-plugin';
 export default defineConfig({
   plugins: [react(), TanStackRouterVite()],
   server: {
-    https: {
-      key: 'localhost.key',
-      cert: 'localhost.crt',
-    },
     host: true,
     strictPort: true,
     port: 3001,

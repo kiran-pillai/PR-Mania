@@ -4,9 +4,6 @@ import { connectToMongo } from './middleware/db';
 import routes from './routes/index';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import https from 'https';
 
 dotenv.config();
 let app = express();
@@ -14,7 +11,7 @@ let port = 8000;
 
 app.use(
   cors({
-    origin: 'https://localhost:3000',
+    origin: 'http://localhost:3000',
     credentials: true,
   })
 );
@@ -24,15 +21,9 @@ app.get('/', (req: any, res: any) => {
   res.send('Hello World!');
 });
 
-const sslOptions = {
-  key: fs.readFileSync(path.join(__dirname, 'localhost.key')),
-  cert: fs.readFileSync(path.join(__dirname, 'localhost.crt')),
-};
-
 connectToMongo();
 
-// const s = app.listen(port, async () => {});
-const s = https.createServer(sslOptions, app).listen(port, async () => {});
+const s = app.listen(port, async () => {});
 app.use('/', routes);
 
 const wss = new WebSocketServer({ noServer: true });
