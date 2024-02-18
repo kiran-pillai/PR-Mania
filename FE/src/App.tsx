@@ -15,10 +15,9 @@ function App() {
   const [data, setData] = useState('');
 
   async function getHelloWorld() {
-    const response = await fetchWithCredentials('base');
-    const text = await response
-      ?.text()
-      ?.catch((err: Error) => console.error(err));
+    const text = await fetchWithCredentials('base', (response: any) =>
+      response.text()
+    );
     setData(text);
   }
 
