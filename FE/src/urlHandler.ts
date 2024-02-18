@@ -39,7 +39,6 @@ export const fetchWithCredentials: any = async (
   let parsedToken: Record<string, number> | null = null;
   try {
     parsedToken = decodeJwtPayload(token);
-    console.log('parsedToken', parsedToken);
   } catch (err: unknown) {
     console.error('error with parsing token', err);
   }

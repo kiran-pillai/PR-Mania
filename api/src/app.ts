@@ -4,6 +4,7 @@ import { connectToMongo } from './middleware/db';
 import routes from './routes/index';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { requireAuth } from './middleware/requireAuth';
 
 dotenv.config();
 let app = express();
@@ -17,7 +18,7 @@ app.use(
 );
 app.use(express.json());
 app.use('/', routes);
-app.get('/', (req: any, res: any) => {
+app.get('/', requireAuth, (req: any, res: any) => {
   res.send('Hello World!');
 });
 

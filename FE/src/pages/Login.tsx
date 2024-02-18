@@ -50,9 +50,9 @@ const Login = (props: PaperProps) => {
         }),
       }
     );
-    let data = await response
-      .json()
-      .catch((err) => console.error('error with login', err));
+    let data = await response.json().catch((err) => {
+      console.error('error with login', err);
+    });
     localStorage.setItem('accessToken', data?.accessToken);
     localStorage.setItem('refreshToken', data?.refreshToken);
     form.reset();
