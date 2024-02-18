@@ -11,7 +11,6 @@ export const requireAuth = (
   next: NextFunction
 ) => {
   let token = req.headers['authorization'];
-  console.log('token', token);
   if (!token) {
     return res.status(403).send('A token is required for authentication');
   }

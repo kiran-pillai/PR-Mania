@@ -34,6 +34,7 @@ export const fetchWithCredentials: any = async (
   let token: string | null = localStorage.getItem('accessToken');
   if (!token) {
     //push to login
+    console.error('no token');
     return;
   }
   let parsedToken: Record<string, number> | null = null;
