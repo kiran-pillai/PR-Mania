@@ -1,9 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import './Chat.css';
+import { useFetchWithCredentials, urlToURI } from '../../urlHandler';
+import { useAuthContext } from '../../context/authContext';
 const Chat = () => {
+  const { setUserIsAuthenticated } = useAuthContext();
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
+  const [data, setData] = useState('');
+
   const webSocket = useRef<any>(null);
+  const fetchWithCredentials = useFetchWithCredentials();
+  async function getHelloWorld() {
+    const text = await fetchWithCredentials('base', (response: any) =>
+      response.text()
+    );
+    setData(text);
+  }
+
+  async function logout() {
+    await fetch(urlToURI('logout'));
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    setUserIsAuthenticated(false);
+  }
+  useEffect(() => {
+    getHelloWorld();
+  }, []);
 
   useEffect(() => {
     // Define the WebSocket connection
@@ -66,6 +88,9 @@ const Chat = () => {
           </div>
         ))}
       </div>
+      <h2>Server says {data}</h2>
+      <button onClick={getHelloWorld}>Send a req</button>
+      <button onClick={logout}>Logout</button>
     </>
   );
 };

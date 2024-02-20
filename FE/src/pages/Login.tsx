@@ -13,12 +13,13 @@ import {
   Stack,
 } from '@mantine/core';
 import { urlToURI } from '../urlHandler';
+import { useAuthContext } from '../context/authContext';
 // import { GoogleButton } from './GoogleButton';
 // import { TwitterButton } from './TwitterButton';
 
 const Login = (props: PaperProps) => {
   const [type, toggle] = useToggle(['login', 'register']);
-
+  const { setUserIsAuthenticated } = useAuthContext();
   const form = useForm({
     initialValues: {
       email: '',
@@ -56,6 +57,7 @@ const Login = (props: PaperProps) => {
     localStorage.setItem('accessToken', data?.accessToken);
     localStorage.setItem('refreshToken', data?.refreshToken);
     form.reset();
+    setUserIsAuthenticated(true);
   };
 
   return (

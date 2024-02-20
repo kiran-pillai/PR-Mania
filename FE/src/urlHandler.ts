@@ -1,3 +1,5 @@
+import { useAuthContext } from './context/authContext';
+
 const API = 'http://localhost:8000';
 
 const AUTH = '/auth';
@@ -28,42 +30,42 @@ export function isTokenExpired(tokenExp: number) {
   return tokenExp < currentUnixTimestamp;
 }
 
-async function refreshTokenCallback(
-  token: string,
-  uri: string,
-  responseParseCallback: any
-) {
+async function refreshTokenCallback(token: string) {
   localStorage.removeItem('accessToken');
   let refreshToken = localStorage.getItem('refreshToken');
   //call refresh route and reset token in local storage
-  let response = await fetch(urlToURI('refresh'), {
-    headers: { 'Content-Type': 'application/json' },
-    method: 'POST',
-    body: JSON.stringify({ refreshToken }),
-  });
-  if (response.ok) {
-    let data = await response
-      .json()
-      ?.catch((err) => console.error('error with refresh token', err));
-    token = data?.accessToken;
-    token && localStorage.setItem('accessToken', token);
-    //call original route again
-    return fetchWithCredentials(uri, responseParseCallback);
+  try {
+    let response = await fetch(urlToURI('refresh'), {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+    });
+    if (response.ok) {
+      let data = await response
+        .json()
+        ?.catch((err) => console.error('error with refresh token', err));
+      token = data?.accessToken;
+      token && localStorage.setItem('accessToken', token);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('error with refresh token', error);
+    return false;
   }
-  //push to login
 }
 
-export async function fetchWithCredentials(
+async function fetchWithCredentials(
   url: string,
-  responseParseCallback: (response: Response) => Promise<any> = (
-    //initialize responseParseCallback to use response.json() if not provided
-    response: Response
-  ) => response.json()
-) {
+  responseParseCallback: (response: Response) => Promise<any>,
+  setUserisAuthenticated: (value: boolean) => void,
+  retry = 1
+): Promise<any> {
   let token: string | null = localStorage.getItem('accessToken');
   if (!token) {
     //push to login
     console.error('no token');
+    setUserisAuthenticated(false);
     return;
   }
 
@@ -79,11 +81,40 @@ export async function fetchWithCredentials(
       error.response = response;
       throw error;
     }
+    setUserisAuthenticated(true);
     return await responseParseCallback(response);
   } catch (error: any) {
     if (error.response.status === 401) {
-      refreshTokenCallback(token, url, responseParseCallback);
+      const isRefreshSuccesful = await refreshTokenCallback(token);
+      return isRefreshSuccesful
+        ? //if refresh is successful, retry fetch
+          retry >= 0 &&
+            fetchWithCredentials(
+              url,
+              responseParseCallback,
+              setUserisAuthenticated,
+              retry - 1
+            )
+        : //if refresh is not successful, redirect to login
+          setUserisAuthenticated(false);
     }
     console.error('error with fetch', error.response);
   }
+}
+
+export function useFetchWithCredentials() {
+  const { setUserIsAuthenticated } = useAuthContext();
+  return async (
+    url: string,
+    responseParseCallback: (response: Response) => Promise<any> = (
+      //initialize responseParseCallback to use response.json() if not provided
+      response: Response
+    ) => response.json()
+  ): Promise<any> => {
+    return await fetchWithCredentials(
+      url,
+      responseParseCallback,
+      setUserIsAuthenticated
+    );
+  };
 }
