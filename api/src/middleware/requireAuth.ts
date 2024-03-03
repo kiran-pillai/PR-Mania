@@ -26,3 +26,16 @@ export const requireAuth = (
 
   return next();
 };
+
+export const requireAuthSocket = (token: string) => {
+  if (!token) {
+    return false;
+  }
+  try {
+    jwt.verify(token, process.env.SECRET_KEY as string);
+    return true;
+  } catch (err) {
+    console.error('error with token', token);
+    throw Error;
+  }
+};

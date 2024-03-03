@@ -2,10 +2,11 @@ import { Router } from 'express';
 import { User } from '../../models/models';
 import { hash } from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { requireAuth } from '../../middleware/requireAuth';
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.send('AUTH');
+router.get('/', requireAuth, (req, res) => {
+  res.send(200);
 });
 
 router.post('/register', async (req, res) => {

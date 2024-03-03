@@ -1,7 +1,8 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { urlToURI, useFetchWithCredentials } from '@/urlHandler';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 interface AuthContextValues {
-  userIsAuthenticated: boolean;
+  userIsAuthenticated: boolean | string;
   setUserIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -20,8 +21,33 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [userIsAuthenticated, setUserIsAuthenticated] =
-    useState<boolean>(false);
+  const [userIsAuthenticated, setUserIsAuthenticated] = useState<
+    boolean | string
+  >('idle');
+  async function revalidateToken() {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      setUserIsAuthenticated(false);
+      return;
+    }
+    try {
+      let res: Response = await fetch(urlToURI('revalidate'), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setUserIsAuthenticated(true);
+      } else {
+        throw Error;
+      }
+    } catch {
+      setUserIsAuthenticated(false);
+      console.error('token is invalid');
+    }
+  }
+
+  useEffect(() => {
+    revalidateToken();
+  }, []);
 
   const contextValues = useMemo(
     () => ({

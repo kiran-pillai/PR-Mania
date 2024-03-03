@@ -5,6 +5,7 @@ const API = 'http://localhost:8000';
 const AUTH = '/auth';
 const mapUrls: any = {
   base: '/',
+  revalidate: `${AUTH}`,
   register: `${AUTH}/register`,
   login: `${AUTH}/login`,
   logout: `${AUTH}/logout`,

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './Chat.css';
+import { Button } from '@/components/ui/button';
 import { useFetchWithCredentials, urlToURI } from '../../urlHandler';
 import { useAuthContext } from '../../context/authContext';
 const Chat = () => {
@@ -28,9 +29,10 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
+    let accessToken = localStorage.getItem('accessToken');
     // Define the WebSocket connection
-    const ws = new WebSocket('ws://localhost:8000');
-
+    let queryParams = encodeURIComponent(`Bearer ${accessToken}`);
+    const ws = new WebSocket(`ws://localhost:8000?token=${queryParams}`);
     ws.onopen = () => console.log('WebSocket Connected');
     ws.onclose = () => console.log('WebSocket Disconnected');
     ws.onmessage = ({ data }) => {
@@ -89,7 +91,7 @@ const Chat = () => {
         ))}
       </div>
       <h2>Server says {data}</h2>
-      <button onClick={getHelloWorld}>Send a req</button>
+      <Button onClick={getHelloWorld}>Send a req</Button>
       <button onClick={logout}>Logout</button>
     </>
   );
