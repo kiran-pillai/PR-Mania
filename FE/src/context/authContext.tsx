@@ -1,9 +1,11 @@
-import { urlToURI, useFetchWithCredentials } from '@/urlHandler';
+import { urlToURI } from '@/urlHandler';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 interface AuthContextValues {
   userIsAuthenticated: boolean | string;
-  setUserIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserIsAuthenticated: React.Dispatch<
+    React.SetStateAction<boolean | string>
+  >;
 }
 
 const AuthContext = createContext<AuthContextValues | undefined>(undefined);
