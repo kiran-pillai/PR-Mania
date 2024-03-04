@@ -17,12 +17,12 @@ function App() {
   const { userIsAuthenticated } = useAuthContext();
   return (
     <>
-      <div className="flex">
+      <div className="flex bg-sky-950">
         <div className="ml-auto">
           <ModeToggle />
         </div>
       </div>
-      {/* {userIsAuthenticated ? <Chat /> : <Login />} */}
+      {userIsAuthenticated ? <Chat /> : <Login />}
     </>
   );
 }

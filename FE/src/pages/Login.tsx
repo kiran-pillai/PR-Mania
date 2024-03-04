@@ -1,42 +1,43 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
-import { useForm } from '@mantine/form';
-import {
-  TextInput,
-  PasswordInput,
-  Text,
-  Paper,
-  Group,
-  PaperProps,
-  Button,
-  Divider,
-  Anchor,
-  Stack,
-} from '@mantine/core';
+import { useToggle } from '@mantine/hooks';
 import { urlToURI } from '../urlHandler';
 import { useAuthContext } from '../context/authContext';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import logo from '../assets/pr_mania.png';
 // import { GoogleButton } from './GoogleButton';
 // import { TwitterButton } from './TwitterButton';
-
-const Login = (props: PaperProps) => {
-  const [type, toggle] = useToggle(['login', 'register']);
+const Login = () => {
+  const [type, toggle] = useToggle(['Login', 'Register']);
   const { setUserIsAuthenticated } = useAuthContext();
-  const form = useForm({
-    initialValues: {
+
+  const formSchema = z.object({
+    email: z.string().email(),
+    name: z.string(),
+    password: z
+      .string()
+      .min(6, { message: 'Password must be at least 6 characters.' }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       email: '',
       name: '',
       password: '',
     },
-
-    validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) =>
-        val.length <= 6
-          ? 'Password should include at least 6 characters'
-          : null,
-    },
   });
 
-  const handleRegister = async () => {
+  const handleRegister = async ({ email, name, password }: any) => {
     const response = await fetch(
       urlToURI(type === 'register' ? 'register' : 'login'),
       {
@@ -45,9 +46,9 @@ const Login = (props: PaperProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: form.values.email,
-          password: form.values.password,
-          name: form.values.name,
+          email: email,
+          password: password,
+          ...(type === 'register' && { name: name }),
         }),
       }
     );
@@ -61,77 +62,95 @@ const Login = (props: PaperProps) => {
   };
 
   return (
-    <Paper radius="md" p="xl" withBorder {...props}>
-      <Text size="lg" fw={500}>
-        Welcome to PR Mania, {type} with
-      </Text>
-
-      <Group grow mb="md" mt="md">
-        {/* <GoogleButton radius="xl">Google</GoogleButton>
-        <TwitterButton radius="xl">Twitter</TwitterButton> */}
-      </Group>
-
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
-
-      <form onSubmit={form.onSubmit(() => handleRegister())}>
-        <Stack>
-          {type === 'register' && (
-            <TextInput
-              label="Name"
-              placeholder="Your name"
-              value={form.values.name}
-              onChange={(event) =>
-                form.setFieldValue('name', event.currentTarget.value)
-              }
-              radius="md"
-            />
-          )}
-
-          <TextInput
-            required
-            label="Email"
-            placeholder="hello@mantine.dev"
-            value={form.values.email}
-            onChange={(event) =>
-              form.setFieldValue('email', event.currentTarget.value)
-            }
-            error={form.errors.email && 'Invalid email'}
-            radius="md"
-          />
-
-          <PasswordInput
-            required
-            label="Password"
-            placeholder="Your password"
-            value={form.values.password}
-            onChange={(event) =>
-              form.setFieldValue('password', event.currentTarget.value)
-            }
-            error={
-              form.errors.password &&
-              'Password should include at least 6 characters'
-            }
-            radius="md"
-          />
-        </Stack>
-
-        <Group justify="space-between" mt="xl">
-          <Anchor
-            component="button"
-            type="button"
-            c="dimmed"
-            onClick={() => toggle()}
-            size="xs">
-            {type === 'register'
-              ? 'Already have an account? Login'
-              : "Don't have an account? Register"}
-          </Anchor>
-          <Button type="submit" radius="xl">
-            {upperFirst(type)}
+    <div className="flex h-screen">
+      <div className="w-1/2 h-full">
+        <img
+          style={{
+            width: '100%',
+            height: '100vh',
+            marginTop: '-1px',
+            marginLeft: '-1px',
+          }}
+          src={logo}
+          alt="logo"
+        />
+      </div>
+      <div className="w-1/2 ">
+        <div className="flex">
+          <Button
+            variant={'ghost'}
+            className="ml-auto"
+            onClick={() => toggle()}>
+            {type === 'Login' ? 'Register' : 'Login'}
           </Button>
-        </Group>
-      </form>
-    </Paper>
+        </div>
+        <div className="flex flex-col items-center justify-center h-full">
+          <h1 className="font-medium text-3xl mb-10">
+            Welcome to PR Mania, {type} with
+          </h1>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit((values) => handleRegister(values))}
+              className="space-y-8">
+              {type === 'Register' && (
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Please enter your name"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Please enter your email"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Please enter your password"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <Button className="w-150" type="submit">
+                Submit
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </div>
+    </div>
   );
 };
 export default Login;
