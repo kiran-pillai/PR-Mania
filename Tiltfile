@@ -14,4 +14,5 @@ live_update=[
     sync('./fe/public','/app/public'),
     sync('./fe/vite.config.ts','/app/vite.config.ts'),
     run('npm install', trigger='./fe/package.json'),
-])
+]
+)

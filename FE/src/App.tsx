@@ -3,9 +3,11 @@ import { routeTree } from './routeTree.gen';
 import { createRouter } from '@tanstack/react-router';
 import Login from './pages/Login';
 import { useAuthContext } from './context/authContext';
-import Chat from './pages/Chat/ Chat';
+import Chat from './Chat/ Chat';
 import { ModeToggle } from './components/mode-toggle';
 import { Button } from './components/ui/button';
+import { MessageSquareMore } from 'lucide-react';
+
 const router = createRouter({ routeTree });
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
@@ -15,15 +17,18 @@ declare module '@tanstack/react-router' {
 }
 function App() {
   const { userIsAuthenticated } = useAuthContext();
-  return (
-    <>
-      <div className="flex bg-sky-950">
-        <div className="ml-auto">
-          <ModeToggle />
-        </div>
+  return userIsAuthenticated ? (
+    <div className="flex">
+      <div className="flex flex-col spacel-y-4 items-center bg-sky-950 navbar justify h-screen mr-10 p-5">
+        <ModeToggle />
+        <MessageSquareMore />
       </div>
-      {userIsAuthenticated ? <Chat /> : <Login />}
-    </>
+      <div className="my-10">
+        <Chat />
+      </div>
+    </div>
+  ) : (
+    <Login />
   );
 }
 
