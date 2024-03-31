@@ -6,8 +6,6 @@ export const connectToMongo = async () => {
   db.on('error', console.error.bind(console, 'MongoDB connection error:'));
   db.once('open', function () {
     // we're connected!
-    console.log('Connected successfully to server');
-
-    // the rest of your app code here
+    console.log('Connected successfully to db');
   });
 };

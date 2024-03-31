@@ -48,7 +48,9 @@ export const AuthContextProvider = ({
   }
 
   useEffect(() => {
-    revalidateToken();
+    if (window.location.pathname !== '/login') {
+      revalidateToken();
+    }
   }, []);
 
   const contextValues = useMemo(
