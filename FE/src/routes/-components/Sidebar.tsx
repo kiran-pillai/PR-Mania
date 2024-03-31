@@ -1,4 +1,6 @@
+import { useTheme } from '@/components/theme-provider';
 import { useAuthContext } from '@/context/authContext';
+import { updateBgColor } from '@/utils/tailwindUtils';
 import { Link } from '@tanstack/react-router';
 import { MessageSquareMore } from 'lucide-react';
 
@@ -8,14 +10,16 @@ interface SidebarProps {
 const Sidebar = (props: SidebarProps) => {
   const { children } = props;
   const { userIsAuthenticated } = useAuthContext();
-
+  const { theme } = useTheme();
   const showSidebar =
     userIsAuthenticated !== 'idle' && userIsAuthenticated === true;
+
   return (
     <>
       {showSidebar ? (
         <div className="flex h-screen">
-          <div className="flex flex-col space-y-4 gap-y-10 mr-10 p-12 bg-sky-950 navbar justify border-t-2 border-white">
+          <div
+            className={`flex flex-col space-y-4 gap-y-10 mr-10 p-12 ${updateBgColor(theme)} navbar justify border-t-2 border-white`}>
             <Link to="/chat">
               <MessageSquareMore />
             </Link>

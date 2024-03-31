@@ -1,12 +1,11 @@
-import { model } from 'mongoose';
 import { Schema, Document } from 'mongoose';
-export interface IUser extends Document {
+export interface IChat extends Document {
   email: string;
   password: string;
   name: string;
 }
 
-export const userSchema = new Schema<IUser>({
+export const chatSchema = new Schema<IChat>({
   name: { type: String, required: true },
   email: {
     type: String,
@@ -23,8 +22,3 @@ export const userSchema = new Schema<IUser>({
   },
   password: { type: String, required: true, minlength: 6 },
 });
-userSchema.index({ name: 'text' });
-const User = model<IUser>('User', userSchema);
-User.createIndexes()
-  .then(() => console.log('Name indexes created'))
-  .catch((err: unknown) => console.error('Error creating indexes', err));
