@@ -21,6 +21,9 @@ services:
     ports:
       - '3000:3000'
     image: pr_mania-ui
+    # volumes:
+    # - .node_modules:/app/node_modules
+    # - .:/app
     container_name: pr_mania-ui
     restart: always
 
