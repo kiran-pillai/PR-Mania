@@ -23,8 +23,3 @@ export const userSchema = new Schema<IUser>({
   },
   password: { type: String, required: true, minlength: 6 },
 });
-userSchema.index({ name: 'text' });
-const User = model<IUser>('User', userSchema);
-User.createIndexes()
-  .then(() => console.log('Name indexes created'))
-  .catch((err: unknown) => console.error('Error creating indexes', err));

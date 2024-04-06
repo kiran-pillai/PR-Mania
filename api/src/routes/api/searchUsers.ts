@@ -10,9 +10,11 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // Search for users
-    const users = await User.find({ $text: { $search: searchQuery } });
-    res.json(users); // It's a good practice to use .json() for JSON responses
+    // Perform a case-insensitive partial search
+    const users = await User.find({
+      name: { $regex: searchQuery, $options: 'i' },
+    });
+    res.json(users);
   } catch (error) {
     console.error('Search error:', error);
     res.status(500).send('Error performing search');

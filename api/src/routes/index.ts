@@ -4,6 +4,6 @@ import searchUsers from './api/searchUsers';
 const router = Router();
 
 router.use('/auth', auth);
-router.use('/search', searchUsers);
+router.use('/search_users', searchUsers);
 
 export default router;

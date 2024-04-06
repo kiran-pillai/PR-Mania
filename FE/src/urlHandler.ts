@@ -10,6 +10,7 @@ const mapUrls: any = {
   login: `${AUTH}/login`,
   logout: `${AUTH}/logout`,
   refresh: `${AUTH}/refresh`,
+  searchUsers: '/search_users/',
 };
 
 export const urlToURI = (endpoint: string) => {
@@ -60,6 +61,7 @@ async function fetchWithCredentials(
   url: string,
   responseParseCallback: (response: Response) => Promise<any>,
   setUserisAuthenticated: (value: boolean) => void,
+  customHeaders?: any,
   retry = 1
 ): Promise<any> {
   let token: string | null = localStorage.getItem('accessToken');
@@ -70,13 +72,17 @@ async function fetchWithCredentials(
     return;
   }
 
+  let config: any = {
+    cache: 'no-store',
+    ...(customHeaders && { ...customHeaders }),
+  };
+
+  config.headers = config.headers
+    ? { ...config.headers, Authorization: `Bearer ${token}` }
+    : { Authorization: `Bearer ${token}` };
+
   try {
-    let response = await fetch(urlToURI(url), {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    let response = await fetch(urlToURI(url), { ...config });
     if (!response.ok) {
       const error: any = new Error('error with fetch');
       error.response = response;
@@ -110,12 +116,14 @@ export function useFetchWithCredentials() {
     responseParseCallback: (response: Response) => Promise<any> = (
       //initialize responseParseCallback to use response.json() if not provided
       response: Response
-    ) => response.json()
+    ) => response.json(),
+    customHeaders?: any
   ): Promise<any> => {
     return await fetchWithCredentials(
       url,
       responseParseCallback,
-      setUserIsAuthenticated
+      setUserIsAuthenticated,
+      customHeaders
     );
   };
 }

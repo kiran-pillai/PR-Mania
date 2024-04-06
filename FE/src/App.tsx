@@ -16,7 +16,7 @@ declare module '@tanstack/react-router' {
   }
 }
 function App() {
-  const { userIsAuthenticated } = useAuthContext();
+  const { userIsAuthenticated, setUserIsAuthenticated } = useAuthContext();
   return userIsAuthenticated ? (
     <div className="flex">
       <div className="flex flex-col spacel-y-4 items-center bg-sky-950 navbar justify h-screen mr-10 p-5">
