@@ -1,26 +1,14 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { debounce } from 'lodash';
 import { useQuery } from '@tanstack/react-query';
 import { useFetchWithCredentials } from '@/urlHandler';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { usePopper } from 'react-popper';
+import { Command, CommandInput } from '@/components/ui/command';
 
-import { createPortal } from 'react-dom';
+import SearchUsersItems from './SearchUsersItems';
 const SearchUsers = () => {
   const [searchText, setSearchText] = useState('');
   const fetchWithCredentials = useFetchWithCredentials();
   const [referenceElement, setReferenceElement] = useState<any>(null);
-  const [popperElement, setPopperElement] = useState<any>(null);
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: 'bottom-start',
-  });
   const { data, isLoading } = useQuery({
     queryKey: ['users_search', searchText],
     queryFn: async () => {
@@ -35,8 +23,27 @@ const SearchUsers = () => {
         });
         return response;
       }
+      return null;
     },
   });
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (
+        commandInputRef.current &&
+        !commandInputRef.current.contains(event.target) &&
+        !document.getElementById('search')?.contains(event.target) &&
+        open
+      ) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [open]);
 
   const debouncedSearchText = useCallback(
     debounce((value: string) => setSearchText(value), 500),
@@ -46,7 +53,6 @@ const SearchUsers = () => {
   const handleSearchUpdate = (e: any) => {
     debouncedSearchText(e.target.value);
   };
-  const [open, setOpen] = useState(false);
 
   return (
     <div className="flex ml-4 space-x-2 items-center">
@@ -60,34 +66,12 @@ const SearchUsers = () => {
           }}
           onClick={() => setOpen(true)}
         />
-        {/* <Input
-          onChange={handleSearchUpdate}
-          className="w-72"
-          placeholder="Search Users"
-          ref={(_ref) => {
-            setReferenceElement(_ref);
-            commandInputRef.current = _ref;
-          }}
-        /> */}
-        {open &&
-          createPortal(
-            <CommandList
-              ref={setPopperElement}
-              style={{
-                ...styles.popper,
-                width: commandInputRef.current?.clientWidth,
-              }}
-              {...attributes.popper}
-              className="bg-black">
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup heading="Suggestions">
-                <CommandItem>Calendar</CommandItem>
-                <CommandItem>Search Emoji</CommandItem>
-                <CommandItem>Calculator</CommandItem>
-              </CommandGroup>
-            </CommandList>,
-            document.getElementById('search') as HTMLElement
-          )}
+        {open && (
+          <SearchUsersItems
+            referenceElement={referenceElement}
+            data={['Calendar', 'Search Emoji', 'Calculator']}
+          />
+        )}
       </Command>
     </div>
   );
