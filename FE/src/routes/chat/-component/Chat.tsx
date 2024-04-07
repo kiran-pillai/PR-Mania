@@ -5,7 +5,6 @@ import { useAuthContext } from '@/context/authContext';
 import { urlToURI, useFetchWithCredentials } from '@/urlHandler';
 
 function Chat() {
-  const { setUserIsAuthenticated } = useAuthContext();
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const [data, setData] = useState('');
@@ -52,7 +51,6 @@ function Chat() {
       console.log('WebSocket not connected');
     }
   };
-  console.log('messages', messages);
   return (
     <div className="flex flex-col w-full h-full justify-center items-center">
       <div className="flex flex-row w-full justify-center items-center gap-x-3 mb-5">
