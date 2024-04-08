@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFetchWithCredentials } from '@/urlHandler';
 import { Command, CommandInput } from '@/components/ui/command';
 
-import SearchUsersItems from './SearchUsersItems';
+import SearchPopper from './SearchUsersPopper';
 const SearchUsers = () => {
   const [searchText, setSearchText] = useState('');
   const fetchWithCredentials = useFetchWithCredentials();
@@ -58,7 +58,7 @@ const SearchUsers = () => {
     <div className="flex ml-4 space-x-2 items-center">
       <Command className="relative overflow-y-visible overflow-x-visible">
         <CommandInput
-          className=""
+          style={{ width: '30rem' }}
           placeholder="Search Users..."
           ref={(_ref) => {
             setReferenceElement(_ref);
@@ -67,7 +67,7 @@ const SearchUsers = () => {
           onClick={() => setOpen(true)}
         />
         {open && (
-          <SearchUsersItems
+          <SearchPopper
             referenceElement={referenceElement}
             data={['Calendar', 'Search Emoji', 'Calculator']}
           />

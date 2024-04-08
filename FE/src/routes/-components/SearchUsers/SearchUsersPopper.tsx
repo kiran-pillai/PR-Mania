@@ -14,7 +14,7 @@ interface SearchUsersItemsProps {
   referenceElement: Element | null | undefined;
 }
 
-const SearchUsersItems = (props: SearchUsersItemsProps) => {
+const SearchUsersPopper = (props: SearchUsersItemsProps) => {
   const { data, referenceElement } = props;
   const [popperElement, setPopperElement] = useState<any>(null);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
@@ -43,4 +43,4 @@ const SearchUsersItems = (props: SearchUsersItemsProps) => {
   );
 };
 
-export default SearchUsersItems;
+export default SearchUsersPopper;

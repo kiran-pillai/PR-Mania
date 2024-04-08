@@ -19,7 +19,10 @@ const Sidebar = (props: SidebarProps) => {
       {showSidebar ? (
         <div className="flex h-screen">
           <div
-            className={`flex flex-col space-y-4 gap-y-10 mr-10 p-12 ${updateBgColor(theme)} navbar justify border-t-2 border-white`}>
+            className={`flex flex-col space-y-4 gap-y-10 mr-10 p-12 ${updateBgColor(theme)} navbar justify border-t-2}`}
+            style={{
+              borderTop: `solid ${theme === 'dark' ? 'white' : 'rgb(161 161 170)'}`,
+            }}>
             <Link to="/chat">
               <MessageSquareMore />
             </Link>

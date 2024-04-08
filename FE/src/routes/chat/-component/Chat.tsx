@@ -1,25 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import '../Chat.css';
 import { Button } from '@/components/ui/button';
-import { useAuthContext } from '@/context/authContext';
-import { urlToURI, useFetchWithCredentials } from '@/urlHandler';
+import { useFetchWithCredentials } from '@/urlHandler';
 
 function Chat() {
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
-  const [data, setData] = useState('');
   const webSocket = useRef<any>(null);
-  const fetchWithCredentials = useFetchWithCredentials();
-  async function getHelloWorld() {
-    const text = await fetchWithCredentials('base', (response: any) =>
-      response.text()
-    );
-    setData(text);
-  }
-
-  useEffect(() => {
-    getHelloWorld();
-  }, []);
 
   useEffect(() => {
     let refreshToken = localStorage.getItem('refreshToken');
