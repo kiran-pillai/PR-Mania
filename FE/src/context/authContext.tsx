@@ -1,11 +1,21 @@
-import { urlToURI } from '@/urlHandler';
+import { decodeJwtPayload, urlToURI } from '@/urlHandler';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+
+interface UserInfo {
+  email: string;
+  name: string;
+  id: string;
+  iat: number;
+  exp: number;
+}
 
 interface AuthContextValues {
   userIsAuthenticated: boolean | string;
   setUserIsAuthenticated: React.Dispatch<
     React.SetStateAction<boolean | string>
   >;
+  userInfo: UserInfo | null;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
 }
 
 const AuthContext = createContext<AuthContextValues | undefined>(undefined);
@@ -26,6 +36,7 @@ export const AuthContextProvider = ({
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<
     boolean | string
   >('idle');
+  const [userInfo, setUserInfo] = useState<any>(null);
   async function revalidateToken() {
     const token = localStorage.getItem('accessToken');
     if (!token) {
@@ -37,6 +48,8 @@ export const AuthContextProvider = ({
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
+        const decodedToken = decodeJwtPayload(token);
+        setUserInfo(decodedToken);
         setUserIsAuthenticated(true);
       } else {
         throw Error;
@@ -57,8 +70,10 @@ export const AuthContextProvider = ({
     () => ({
       userIsAuthenticated,
       setUserIsAuthenticated,
+      userInfo,
+      setUserInfo,
     }),
-    [userIsAuthenticated, setUserIsAuthenticated]
+    [userIsAuthenticated, setUserIsAuthenticated, userInfo, setUserInfo]
   );
   return (
     <AuthContext.Provider value={contextValues}>

@@ -4,6 +4,7 @@ export interface IUser extends Document {
   email: string;
   password: string;
   name: string;
+  friends: Schema.Types.ObjectId[];
 }
 
 export const userSchema = new Schema<IUser>({
@@ -22,4 +23,5 @@ export const userSchema = new Schema<IUser>({
     },
   },
   password: { type: String, required: true, minlength: 6 },
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });

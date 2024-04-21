@@ -9,11 +9,11 @@ const SearchUsers = () => {
   const [searchText, setSearchText] = useState('');
   const fetchWithCredentials = useFetchWithCredentials();
   const [referenceElement, setReferenceElement] = useState<any>(null);
-  const { data, isLoading } = useQuery({
+  const { data: userData, isLoading } = useQuery({
     queryKey: ['users_search', searchText],
     queryFn: async () => {
       if (searchText) {
-        const response = await fetchWithCredentials('searchUsers', undefined, {
+        const response = await fetchWithCredentials('searchUsers', {
           method: 'POST',
           cache: 'no-store',
           headers: {
@@ -71,7 +71,7 @@ const SearchUsers = () => {
           <SearchUsersPopper
             searchText={searchText}
             referenceElement={referenceElement}
-            data={data}
+            userData={userData}
           />
         )}
       </Command>

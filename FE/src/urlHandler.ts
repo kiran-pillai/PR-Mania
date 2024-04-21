@@ -11,6 +11,7 @@ const mapUrls: any = {
   logout: `${AUTH}/logout`,
   refresh: `${AUTH}/refresh`,
   searchUsers: '/search_users/',
+  addFriend: '/friends/add',
 };
 
 export const urlToURI = (endpoint: string) => {
@@ -113,11 +114,11 @@ export function useFetchWithCredentials() {
   const { setUserIsAuthenticated } = useAuthContext();
   return async (
     url: string,
+    customHeaders?: any,
     responseParseCallback: (response: Response) => Promise<any> = (
       //initialize responseParseCallback to use response.json() if not provided
       response: Response
-    ) => response.json(),
-    customHeaders?: any
+    ) => response.json()
   ): Promise<any> => {
     return await fetchWithCredentials(
       url,

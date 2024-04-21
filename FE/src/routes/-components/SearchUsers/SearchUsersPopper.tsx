@@ -3,21 +3,20 @@ import { useTheme } from '@/components/theme-provider';
 import {
   CommandEmpty,
   CommandGroup,
-  CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { usePopper } from 'react-popper';
+import SearchUsersRow, { User } from './SearchUsersRow';
 
-interface SearchUsersItemsProps {
-  data: any[];
+interface SearchUsersPopperProps {
+  userData: User[] | [];
   referenceElement: Element | null | undefined;
   searchText: string;
 }
 
-const SearchUsersPopper = (props: SearchUsersItemsProps) => {
-  const { data, referenceElement, searchText } = props;
+const SearchUsersPopper = (props: SearchUsersPopperProps) => {
+  const { userData, referenceElement, searchText } = props;
   const [popperElement, setPopperElement] = useState<any>(null);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'bottom-start',
@@ -35,13 +34,10 @@ const SearchUsersPopper = (props: SearchUsersItemsProps) => {
         {...attributes.popper}
         className={bg}>
         {searchText && <CommandEmpty>No results found.</CommandEmpty>}
-        {data?.length > 0 && (
+        {userData?.length > 0 && (
           <CommandGroup heading="Users">
-            {data?.map((item: any) => (
-              <div key={item} className="flex">
-                <CommandItem>{item?.name}</CommandItem>
-                <Check className="ml-auto" />
-              </div>
+            {userData?.map((user: any) => (
+              <SearchUsersRow key={user._id} user={user} />
             ))}
           </CommandGroup>
         )}

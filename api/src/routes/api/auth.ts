@@ -38,12 +38,20 @@ router.post('/login', async (req, res) => {
       return res.status(400).send('Invalid Password');
     }
     const secret: any = process.env.SECRET_KEY;
-    const accessToken = jwt.sign({ email, name: user.name }, secret, {
-      expiresIn: '1h',
-    });
-    const refreshToken = jwt.sign({ email, name: user.name }, secret, {
-      expiresIn: '20d',
-    });
+    const accessToken = jwt.sign(
+      { email, name: user.name, id: user._id },
+      secret,
+      {
+        expiresIn: '1h',
+      }
+    );
+    const refreshToken = jwt.sign(
+      { email, name: user.name, id: user._id },
+      secret,
+      {
+        expiresIn: '20d',
+      }
+    );
     return res.status(200).send({ accessToken, refreshToken });
   } catch (err) {
     console.error(err);
@@ -67,7 +75,7 @@ router.post('/refresh', (req, res) => {
     return res.status(500).send('Internal Server Error');
   }
   let accessToken = jwt.sign(
-    { email: decoded?.email, name: decoded?.name },
+    { email: decoded?.email, name: decoded?.name, id: decoded?.id },
     secret,
     { expiresIn: '1h' }
   );
