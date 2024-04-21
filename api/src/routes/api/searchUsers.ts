@@ -11,9 +11,9 @@ router.post('/', async (req, res) => {
 
   try {
     // Perform a case-insensitive partial search
-    const users = await User.find({
+    let users = await User.find({
       name: { $regex: searchQuery, $options: 'i' },
-    });
+    }).select('-password');
     res.json(users);
   } catch (error) {
     console.error('Search error:', error);

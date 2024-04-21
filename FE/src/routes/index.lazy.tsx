@@ -10,9 +10,9 @@ export const Route = createLazyFileRoute('/')({
 function Index() {
   const { userIsAuthenticated } = useAuthContext();
   const navigate = useNavigate();
-
   const navigateToView = async () => {
-    if (userIsAuthenticated) await navigate({ to: '/chat' });
+    if (userIsAuthenticated && userIsAuthenticated !== 'idle')
+      await navigate({ to: '/chat' });
     else {
       await navigate({ to: '/login' });
     }

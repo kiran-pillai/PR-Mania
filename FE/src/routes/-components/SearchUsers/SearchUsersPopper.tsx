@@ -6,16 +6,18 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { usePopper } from 'react-popper';
 
 interface SearchUsersItemsProps {
   data: any[];
   referenceElement: Element | null | undefined;
+  searchText: string;
 }
 
 const SearchUsersPopper = (props: SearchUsersItemsProps) => {
-  const { data, referenceElement } = props;
+  const { data, referenceElement, searchText } = props;
   const [popperElement, setPopperElement] = useState<any>(null);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'bottom-start',
@@ -32,12 +34,17 @@ const SearchUsersPopper = (props: SearchUsersItemsProps) => {
         }}
         {...attributes.popper}
         className={bg}>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          {data.map((item: any) => (
-            <CommandItem key={item}>{item}</CommandItem>
-          ))}
-        </CommandGroup>
+        {searchText && <CommandEmpty>No results found.</CommandEmpty>}
+        {data?.length > 0 && (
+          <CommandGroup heading="Users">
+            {data?.map((item: any) => (
+              <div key={item} className="flex">
+                <CommandItem>{item?.name}</CommandItem>
+                <Check className="ml-auto" />
+              </div>
+            ))}
+          </CommandGroup>
+        )}
       </CommandList>
     </Portal>
   );

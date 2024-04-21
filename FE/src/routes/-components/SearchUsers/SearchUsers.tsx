@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useFetchWithCredentials } from '@/urlHandler';
 import { Command, CommandInput } from '@/components/ui/command';
 
-import SearchPopper from './SearchUsersPopper';
+import SearchUsersPopper from './SearchUsersPopper';
 const SearchUsers = () => {
   const [searchText, setSearchText] = useState('');
   const fetchWithCredentials = useFetchWithCredentials();
@@ -25,9 +25,9 @@ const SearchUsers = () => {
       }
       return null;
     },
+    placeholderData: [],
   });
   const [open, setOpen] = useState(false);
-
   useEffect(() => {
     const handleClickOutside = (event: any) => {
       if (
@@ -60,6 +60,7 @@ const SearchUsers = () => {
         <CommandInput
           style={{ width: '30rem' }}
           placeholder="Search Users..."
+          onInput={handleSearchUpdate}
           ref={(_ref) => {
             setReferenceElement(_ref);
             commandInputRef.current = _ref;
@@ -67,9 +68,10 @@ const SearchUsers = () => {
           onClick={() => setOpen(true)}
         />
         {open && (
-          <SearchPopper
+          <SearchUsersPopper
+            searchText={searchText}
             referenceElement={referenceElement}
-            data={['Calendar', 'Search Emoji', 'Calculator']}
+            data={data}
           />
         )}
       </Command>
