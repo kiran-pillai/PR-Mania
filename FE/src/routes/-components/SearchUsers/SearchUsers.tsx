@@ -15,7 +15,6 @@ const SearchUsers = () => {
       if (searchText) {
         const response = await fetchWithCredentials('searchUsers', {
           method: 'POST',
-          cache: 'no-store',
           headers: {
             'Content-Type': 'application/json',
           },
