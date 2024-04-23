@@ -78,10 +78,10 @@ async function fetchWithCredentials(
     cache: 'no-store',
     ...(customHeaders && { ...customHeaders }),
   };
-
-  config.headers = config.headers
-    ? { ...config.headers, Authorization: `Bearer ${token}` }
-    : { Authorization: `Bearer ${token}` };
+  config.headers = {
+    ...(config.headers && { ...config.headers }),
+    Authorization: `Bearer ${token}`,
+  };
 
   try {
     let response = await fetch(urlToURI(url), { ...config });
