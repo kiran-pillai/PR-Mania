@@ -21,7 +21,10 @@ const SearchUsersRow = (props: SearchUsersRowProps) => {
   return (
     <div key={user?._id} className="flex justify-between">
       <CommandItem>{user?.name}</CommandItem>
-      <Plus onClick={() => addFriendMutation(user?._id)} />
+      <Plus
+        style={{ cursor: 'pointer' }}
+        onClick={() => addFriendMutation(user?._id)}
+      />
     </div>
   );
 };

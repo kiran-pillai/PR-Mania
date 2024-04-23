@@ -11,6 +11,7 @@ const mapUrls: any = {
   logout: `${AUTH}/logout`,
   refresh: `${AUTH}/refresh`,
   searchUsers: '/search_users/',
+  getFriendsList: '/friends',
   addFriend: '/friends/add',
 };
 

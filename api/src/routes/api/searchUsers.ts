@@ -1,9 +1,12 @@
 import { Router } from 'express';
 import { User } from '../../models/models';
+import { decodeToken } from '../../utils/utils';
 
 const router = Router();
 
 router.post('/', async (req, res) => {
+  const decodedToken = decodeToken(req);
+  const { id: userId } = decodedToken;
   const searchQuery = req.body.search_query;
   if (!searchQuery) {
     return res.status(400).send('No search query provided');
@@ -12,6 +15,7 @@ router.post('/', async (req, res) => {
   try {
     // Perform a case-insensitive partial search
     let users = await User.find({
+      _id: { $ne: userId },
       name: { $regex: searchQuery, $options: 'i' },
     }).select('-password');
     res.json(users);

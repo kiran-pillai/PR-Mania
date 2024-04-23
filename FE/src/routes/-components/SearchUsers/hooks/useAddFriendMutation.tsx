@@ -10,6 +10,9 @@ export const useAddFriendMutation = () => {
       let res = await fetchWithCredentials('addFriend', {
         method: 'POST',
         body: JSON.stringify({ friendId: friendId }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
       if (!res.ok) {
         throw new Error('Error adding friend');
