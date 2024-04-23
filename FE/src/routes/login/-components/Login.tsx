@@ -37,29 +37,38 @@ const Login = () => {
     },
   });
 
-  const handleRegister = async ({ email, name, password }: any) => {
-    const response = await fetch(
-      urlToURI(type === 'register' ? 'register' : 'login'),
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          ...(type === 'register' && { name: name }),
-        }),
-      }
-    );
-    let data = await response.json().catch((err) => {
-      console.error('error with login', err);
-    });
-    localStorage.setItem('accessToken', data?.accessToken);
-    localStorage.setItem('refreshToken', data?.refreshToken);
+  const toggleForms = () => {
+    toggle();
     form.reset();
-    setUserIsAuthenticated(true);
-    navigate({ to: '/chat' });
+  };
+
+  const handleSubmit = async ({ email, name, password }: any) => {
+    try {
+      const res = await fetch(
+        urlToURI(type === 'Register' ? 'register' : 'login'),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+            ...(type === 'Register' && { name: name }),
+          }),
+        }
+      );
+      if (res?.ok) {
+        let data = await res.json();
+        localStorage.setItem('accessToken', data?.accessToken);
+        localStorage.setItem('refreshToken', data?.refreshToken);
+        form.reset();
+        setUserIsAuthenticated(true);
+        navigate({ to: '/chat' });
+      }
+    } catch (error) {
+      console.error('error with login', error);
+    }
   };
 
   return (
@@ -78,10 +87,7 @@ const Login = () => {
       </div>
       <div className="w-1/2 ">
         <div className="flex">
-          <Button
-            variant={'ghost'}
-            className="ml-auto"
-            onClick={() => toggle()}>
+          <Button variant={'ghost'} className="ml-auto" onClick={toggleForms}>
             {type === 'Login' ? 'Register' : 'Login'}
           </Button>
         </div>
@@ -91,7 +97,7 @@ const Login = () => {
           </h1>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit((values) => handleRegister(values))}
+              onSubmit={form.handleSubmit((values) => handleSubmit(values))}
               className="space-y-8">
               {type === 'Register' && (
                 <FormField

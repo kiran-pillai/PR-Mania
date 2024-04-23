@@ -1,9 +1,20 @@
 import { Router } from 'express';
 import { User } from '../../models/models';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { requireAuth } from '../../middleware/requireAuth';
 const router = Router();
+
+const getTokens = (email: string, name: string, id: string) => {
+  const secret = process.env.SECRET_KEY as string;
+  const accessToken = jwt.sign({ email, name: name, id }, secret, {
+    expiresIn: '1h',
+  });
+  const refreshToken = jwt.sign({ email, name, id }, secret, {
+    expiresIn: '20d',
+  });
+  return { accessToken, refreshToken };
+};
 
 router.get('/', requireAuth, (req, res) => {
   res.send(200);
@@ -16,7 +27,16 @@ router.post('/register', async (req, res) => {
     let hashedPassword = await hash(password, 10);
     let user = new User({ ...formData, password: hashedPassword });
     await user.save();
-    return res.status(201).send('User registered successfully');
+    const { accessToken, refreshToken } = getTokens(
+      user?.email,
+      user?.name,
+      user?.id
+    );
+    return res.status(201).json({
+      message: 'User registered successfully',
+      accessToken,
+      refreshToken,
+    });
   } catch (err: unknown) {
     if (err instanceof Error && err.name === 'ValidationError') {
       return res.status(400).send(err.message);
@@ -33,25 +53,11 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(400).send("User doesn't exist");
     }
-    let isMatch = password === user['password'];
+    let isMatch = await compare(password, user['password']);
     if (!isMatch) {
       return res.status(400).send('Invalid Password');
     }
-    const secret: any = process.env.SECRET_KEY;
-    const accessToken = jwt.sign(
-      { email, name: user.name, id: user._id },
-      secret,
-      {
-        expiresIn: '1h',
-      }
-    );
-    const refreshToken = jwt.sign(
-      { email, name: user.name, id: user._id },
-      secret,
-      {
-        expiresIn: '20d',
-      }
-    );
+    const { accessToken, refreshToken } = getTokens(email, user.name, user._id);
     return res.status(200).send({ accessToken, refreshToken });
   } catch (err) {
     console.error(err);

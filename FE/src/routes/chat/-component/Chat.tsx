@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import '../Chat.css';
 import { Button } from '@/components/ui/button';
-import { useFetchWithCredentials } from '@/urlHandler';
 
 function Chat() {
   const [messages, setMessages] = useState<any[]>([]);
