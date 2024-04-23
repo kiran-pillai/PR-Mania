@@ -59,7 +59,7 @@ router.post('/add', async (req, res) => {
   }
 });
 
-router.delete('/add', async (req, res) => {
+router.delete('/remove', async (req, res) => {
   const { friendId } = req.body;
   const decodedToken = decodeToken(req);
   const { id: userId } = decodedToken;

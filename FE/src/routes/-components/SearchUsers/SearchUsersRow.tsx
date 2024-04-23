@@ -1,7 +1,8 @@
 import { CommandItem } from '@/components/ui/command';
 import { useAuthContext } from '@/context/authContext';
-import { Check, Plus } from 'lucide-react';
-import { useAddFriendMutation } from './hooks/useAddFriendMutation';
+import { Minus, Plus } from 'lucide-react';
+import { useManageFriendMutation } from './hooks/useManageFriendMutation';
+import { useAppContext } from '@/context/appContext';
 
 export interface User {
   _id: string;
@@ -16,15 +17,26 @@ interface SearchUsersRowProps {
 
 const SearchUsersRow = (props: SearchUsersRowProps) => {
   const { user } = props;
-  const { userInfo: loggedInUser } = useAuthContext();
-  const { addFriendMutation } = useAddFriendMutation();
+  const { manageFriendMutation } = useManageFriendMutation();
+  const { friendsListData } = useAppContext();
   return (
     <div key={user?._id} className="flex justify-between">
       <CommandItem>{user?.name}</CommandItem>
-      <Plus
-        style={{ cursor: 'pointer' }}
-        onClick={() => addFriendMutation(user?._id)}
-      />
+      <div style={{ cursor: 'pointer' }}>
+        {friendsListData?.[user?._id] ? (
+          <Minus
+            onClick={() =>
+              manageFriendMutation({ friendId: user?._id, type: 'remove' })
+            }
+          />
+        ) : (
+          <Plus
+            onClick={() =>
+              manageFriendMutation({ friendId: user?._id, type: 'add' })
+            }
+          />
+        )}
+      </div>
     </div>
   );
 };

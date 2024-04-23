@@ -13,6 +13,7 @@ const mapUrls: any = {
   searchUsers: '/search_users/',
   getFriendsList: '/friends',
   addFriend: '/friends/add',
+  removeFriend: '/friends/remove',
 };
 
 export const urlToURI = (endpoint: string) => {

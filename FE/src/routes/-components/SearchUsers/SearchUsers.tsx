@@ -10,7 +10,7 @@ const SearchUsers = () => {
   const fetchWithCredentials = useFetchWithCredentials();
   const [referenceElement, setReferenceElement] = useState<any>(null);
   const { data: userData, isLoading } = useQuery({
-    queryKey: ['users_search', searchText],
+    queryKey: ['userSearch', searchText],
     queryFn: async () => {
       if (searchText) {
         const response = await fetchWithCredentials('searchUsers', {

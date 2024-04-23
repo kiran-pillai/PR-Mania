@@ -26,7 +26,6 @@ export const AppContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  console.log('hello from AppContextProvider');
   const fetchWithCredentials = useFetchWithCredentials();
   const { data: friendsListData, isLoading: friendsListIsLoading } = useQuery({
     queryKey: ['friendsList'],
