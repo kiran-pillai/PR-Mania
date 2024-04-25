@@ -4,7 +4,7 @@
 
 PR Mania is meant to be an application used to interact with fellow lifters and post your accomplishment in the gym.
 
-### Run UI-Files Local
+### Run Local Dev Env
 
 1. Pull repo
 2. Ensure you have both tilt and docker installed
