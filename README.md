@@ -13,4 +13,5 @@ PR Mania is meant to be an application used to interact with fellow lifters and 
 3. In the root directory perform `tilt up` command
 4. Visit http://localhost:10350/ to view tilt UI
 5. Visit http://localhost:3000/ to view UI
-6. Enjoy!
+6. Register a username and password
+7. Enjoy!
