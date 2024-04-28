@@ -35,7 +35,7 @@ export const AuthContextProvider = ({
 }) => {
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<
     boolean | string
-  >('idle');
+  >(false);
   const [userInfo, setUserInfo] = useState<any>(null);
   async function revalidateToken() {
     const token = localStorage.getItem('accessToken');

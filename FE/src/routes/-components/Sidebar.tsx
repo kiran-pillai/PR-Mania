@@ -11,12 +11,10 @@ const Sidebar = (props: SidebarProps) => {
   const { children } = props;
   const { userIsAuthenticated } = useAuthContext();
   const { theme } = useTheme();
-  const showSidebar =
-    userIsAuthenticated !== 'idle' && userIsAuthenticated === true;
 
   return (
     <>
-      {showSidebar ? (
+      {userIsAuthenticated ? (
         <div className="flex h-screen">
           <div
             className={`flex flex-col space-y-4 gap-y-10 mr-10 p-12 ${updateBgColor(theme)} navbar justify border-t-2}`}
