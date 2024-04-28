@@ -13,6 +13,7 @@ const TopBar = () => {
   const navigate = useNavigate();
   async function logout() {
     await fetch(urlToURI('logout'));
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setUserIsAuthenticated(false);
     navigate({ to: '/login' });

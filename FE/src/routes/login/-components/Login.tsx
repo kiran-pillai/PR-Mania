@@ -13,12 +13,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import logo from '../../../assets/pr_mania.png';
 import { useAuthContext } from '@/context/authContext';
-import { urlToURI } from '@/urlHandler';
+import { decodeJwtPayload, urlToURI } from '@/urlHandler';
 import { useNavigate } from '@tanstack/react-router';
 
 const Login = () => {
   const [type, toggle] = useToggle(['Login', 'Register']);
-  const { setUserIsAuthenticated } = useAuthContext();
+  const { setUserIsAuthenticated, setUserInfo } = useAuthContext();
   const navigate = useNavigate();
   const formSchema = z.object({
     email: z.string().email(),
@@ -62,7 +62,9 @@ const Login = () => {
         let data = await res.json();
         localStorage.setItem('accessToken', data?.accessToken);
         localStorage.setItem('refreshToken', data?.refreshToken);
+        let userInfo = decodeJwtPayload(data?.accessToken);
         form.reset();
+        setUserInfo(userInfo);
         setUserIsAuthenticated(true);
         navigate({ to: '/chat' });
       }
