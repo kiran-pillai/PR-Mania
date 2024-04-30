@@ -1,6 +1,6 @@
 import { useTheme } from '@/components/theme-provider';
 import { useAuthContext } from '@/context/authContext';
-import { updateBgColor } from '@/utils/tailwindUtils';
+import { getBorderColor, updateBgColor } from '@/utils/tailwindUtils';
 import { Link } from '@tanstack/react-router';
 import { MessageSquareMore } from 'lucide-react';
 
@@ -17,15 +17,16 @@ const Sidebar = (props: SidebarProps) => {
       {userIsAuthenticated ? (
         <div className="flex h-screen">
           <div
-            className={`flex flex-col space-y-4 gap-y-10 mr-10 p-12 ${updateBgColor(theme)} navbar justify border-t-2}`}
+            className={`flex flex-col space-y-4 gap-y-10 p-8 ${updateBgColor(theme)} navbar justify border-t-2}`}
             style={{
-              borderTop: `solid ${theme === 'dark' ? 'white' : 'rgb(161 161 170)'}`,
+              borderTop: getBorderColor(theme),
+              borderRight: getBorderColor(theme),
             }}>
             <Link to="/chat">
               <MessageSquareMore />
             </Link>
           </div>
-          <div className="flex w-screen mt-10">{children}</div>
+          {children}
         </div>
       ) : (
         children

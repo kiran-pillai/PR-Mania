@@ -52,12 +52,10 @@ const SearchUsers = () => {
   const handleSearchUpdate = (e: any) => {
     debouncedSearchText(e.target.value);
   };
-
   return (
     <div className="flex ml-4 space-x-2 items-center">
-      <Command className="relative overflow-y-visible overflow-x-visible">
+      <Command className="relative overflow-y-visible overflow-x-visible w-full sm:w-100 md:w-150 lg:w-150">
         <CommandInput
-          style={{ width: '30rem' }}
           placeholder="Search Users..."
           onInput={handleSearchUpdate}
           ref={(_ref) => {

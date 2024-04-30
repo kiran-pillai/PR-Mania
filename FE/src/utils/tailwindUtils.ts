@@ -6,3 +6,6 @@ export const updateBgColor = (theme: string) => {
     return 'bg-sky-200';
   }
 };
+
+export const getBorderColor = (theme: string) =>
+  `2px solid ${theme === 'dark' ? 'var(--dark-seperator)' : 'var(--light-seperator)'}`;

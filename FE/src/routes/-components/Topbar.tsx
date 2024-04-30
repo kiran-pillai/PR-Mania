@@ -25,7 +25,7 @@ const TopBar = () => {
     <>
       {userIsAuthenticated ? (
         <div
-          className={`flex w-screen ${updateBgColor(theme)} topbar pb-4 items-center  border-t-1 border-white-1000 py-5`}>
+          className={`flex w-screen ${updateBgColor(theme)} topbar pb-4 items-center border-t-1 border-white-1000 py-5`}>
           <SearchUsers />
           <div className="flex ml-auto mr-5 space-x-6">
             <ModeToggle />
