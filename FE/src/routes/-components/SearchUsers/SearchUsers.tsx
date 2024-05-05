@@ -1,31 +1,27 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { debounce } from 'lodash';
-import { useQuery } from '@tanstack/react-query';
-import { useFetchWithCredentials } from '@/urlHandler';
-import { Command, CommandInput } from '@/components/ui/command';
+import { useEffect, useRef, useState } from 'react';
 
+import { Command, CommandInput } from '@/components/ui/command';
 import SearchUsersPopper from './SearchUsersPopper';
-const SearchUsers = () => {
-  const [searchText, setSearchText] = useState('');
-  const fetchWithCredentials = useFetchWithCredentials();
+import { useSearchUsers } from './hooks/useSearchUsers';
+
+export enum SearchUsersVariant {
+  SEARCH_USERS = 'search_users',
+  SEARCH_USERS_CHAT = 'search_users_chat',
+}
+
+interface SearchUsersProps {
+  variant: SearchUsersVariant;
+}
+
+const SearchUsers = (props: SearchUsersProps) => {
+  const { variant } = props;
+  const inputClassName =
+    variant === SearchUsersVariant.SEARCH_USERS
+      ? 'w-full sm:w-100 md:w-150 lg:w-150'
+      : '';
   const [referenceElement, setReferenceElement] = useState<any>(null);
-  const { data: userData, isLoading } = useQuery({
-    queryKey: ['userSearch', searchText],
-    queryFn: async () => {
-      if (searchText) {
-        const response = await fetchWithCredentials('searchUsers', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ search_query: searchText }),
-        });
-        return response;
-      }
-      return null;
-    },
-    placeholderData: [],
-  });
+  const { userData, isLoading, handleSearchUpdate, searchText } =
+    useSearchUsers();
   const [open, setOpen] = useState(false);
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -44,17 +40,11 @@ const SearchUsers = () => {
     };
   }, [open]);
 
-  const debouncedSearchText = useCallback(
-    debounce((value: string) => setSearchText(value), 500),
-    []
-  );
   const commandInputRef = useRef<any>(null);
-  const handleSearchUpdate = (e: any) => {
-    debouncedSearchText(e.target.value);
-  };
+
   return (
     <div className="flex ml-4 space-x-2 items-center">
-      <Command className="relative overflow-y-visible overflow-x-visible w-full sm:w-100 md:w-150 lg:w-150">
+      <Command className="relative overflow-y-visible overflow-x-visible">
         <CommandInput
           placeholder="Search Users..."
           onInput={handleSearchUpdate}
@@ -62,6 +52,7 @@ const SearchUsers = () => {
             setReferenceElement(_ref);
             commandInputRef.current = _ref;
           }}
+          className={inputClassName}
           onClick={() => setOpen(true)}
         />
         {open && (
