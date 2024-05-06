@@ -9,19 +9,10 @@ export enum SearchUsersVariant {
   SEARCH_USERS_CHAT = 'search_users_chat',
 }
 
-interface SearchUsersProps {
-  variant: SearchUsersVariant;
-}
-
-const SearchUsers = (props: SearchUsersProps) => {
-  const { variant } = props;
-  const inputClassName =
-    variant === SearchUsersVariant.SEARCH_USERS
-      ? 'w-full sm:w-100 md:w-150 lg:w-150'
-      : '';
+const SearchUsers = () => {
   const [referenceElement, setReferenceElement] = useState<any>(null);
-  const { userData, isLoading, handleSearchUpdate, searchText } =
-    useSearchUsers();
+  const { userData, handleOnInputChange, searchText } =
+    useSearchUsers('searchUsers');
   const [open, setOpen] = useState(false);
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -47,12 +38,12 @@ const SearchUsers = (props: SearchUsersProps) => {
       <Command className="relative overflow-y-visible overflow-x-visible">
         <CommandInput
           placeholder="Search Users..."
-          onInput={handleSearchUpdate}
+          onInput={handleOnInputChange}
           ref={(_ref) => {
             setReferenceElement(_ref);
             commandInputRef.current = _ref;
           }}
-          className={inputClassName}
+          className="w-full sm:w-100 md:w-150 lg:w-150"
           onClick={() => setOpen(true)}
         />
         {open && (

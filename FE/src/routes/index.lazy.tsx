@@ -2,6 +2,7 @@ import { useAuthContext } from '@/context/authContext';
 import { createLazyFileRoute, useNavigate } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+//When user visits "/" route
 export const Route = createLazyFileRoute('/')({
   component: Index,
 });

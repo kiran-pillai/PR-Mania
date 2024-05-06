@@ -8,4 +8,4 @@ export const updateBgColor = (theme: string) => {
 };
 
 export const getBorderColor = (theme: string) =>
-  `2px solid ${theme === 'dark' ? 'var(--dark-seperator)' : 'var(--light-seperator)'}`;
+  `${theme === 'dark' ? '2px solid var(--dark-seperator)' : '0.5px solid var(--light-seperator)'}`;

@@ -1,10 +1,6 @@
-import {
-  decodeJwtPayload,
-  urlToURI,
-  useFetchWithCredentials,
-} from '@/urlHandler';
+import { useFetchWithCredentials } from '@/urlHandler';
 import { useQuery } from '@tanstack/react-query';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 
 interface AppContextValues {
   friendsListData: Record<string, boolean>;
@@ -43,7 +39,6 @@ export const AppContextProvider = ({
     }),
     [friendsListData, friendsListIsLoading]
   );
-
   return (
     <AppContext.Provider value={contextValues}>{children}</AppContext.Provider>
   );

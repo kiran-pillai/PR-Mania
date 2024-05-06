@@ -152,7 +152,7 @@ const Login = () => {
                   </FormItem>
                 )}
               />
-              <Button className="w-150" type="submit">
+              <Button className="mx-auto" type="submit">
                 Submit
               </Button>
             </form>

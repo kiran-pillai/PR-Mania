@@ -11,9 +11,10 @@ const mapUrls: any = {
   logout: `${AUTH}/logout`,
   refresh: `${AUTH}/refresh`,
   searchUsers: '/search_users/',
-  getFriendsList: '/friends',
+  getFriendsListIds: '/friends/list_ids',
   addFriend: '/friends/add',
   removeFriend: '/friends/remove',
+  searchFriends: '/friends/search',
 };
 
 export const urlToURI = (endpoint: string) => {

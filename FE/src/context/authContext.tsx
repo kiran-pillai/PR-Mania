@@ -1,7 +1,7 @@
 import { decodeJwtPayload, urlToURI } from '@/urlHandler';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-interface UserInfo {
+export interface UserInfo {
   email: string;
   name: string;
   id: string;
@@ -35,7 +35,7 @@ export const AuthContextProvider = ({
 }) => {
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<
     boolean | string
-  >(false);
+  >('idle');
   const [userInfo, setUserInfo] = useState<any>(null);
   async function revalidateToken() {
     const token = localStorage.getItem('accessToken');

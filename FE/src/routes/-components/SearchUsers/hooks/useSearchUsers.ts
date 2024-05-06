@@ -3,13 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { debounce } from 'lodash';
 
-export const useSearchUsers = () => {
+export const useSearchUsers = (url: string) => {
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useCallback(
     debounce((value: string) => setSearchText(value), 500),
     []
   );
-  const handleSearchUpdate = (e: any) => {
+  const handleOnInputChange = (e: any) => {
     debouncedSearchText(e.target.value);
   };
   const fetchWithCrenderials = useFetchWithCredentials();
@@ -17,7 +17,7 @@ export const useSearchUsers = () => {
     queryKey: ['userSearch', searchText],
     queryFn: async () => {
       if (searchText) {
-        const response = await fetchWithCrenderials('searchUsers', {
+        const response = await fetchWithCrenderials(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -30,5 +30,5 @@ export const useSearchUsers = () => {
     },
     placeholderData: [],
   });
-  return { userData, isLoading, handleSearchUpdate, searchText };
+  return { userData, isLoading, handleOnInputChange, searchText };
 };

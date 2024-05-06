@@ -5,7 +5,22 @@ import { decodeToken } from '../../utils/utils';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/list', async (req, res) => {
+  const token: any = req.headers['authorization']?.split(' ')[1];
+  const decodedToken: any = jwt.decode(token, { complete: false });
+  const { id: userId } = decodedToken;
+  if (!userId) {
+    return res.status(400).json({ message: 'Invalid token' });
+  }
+  try {
+    const user = await User.findById(userId).select('friends -_id');
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching friends:', error);
+  }
+});
+
+router.get('/list_ids', async (req, res) => {
   const token: any = req.headers['authorization']?.split(' ')[1];
   const decodedToken: any = jwt.decode(token, { complete: false });
   const { id: userId } = decodedToken;
@@ -24,6 +39,29 @@ router.get('/', async (req, res) => {
     res.json(hashMap);
   } catch (error) {
     console.error('Error fetching friends:', error);
+  }
+});
+
+router.post('/search', async (req, res) => {
+  const decodedToken = decodeToken(req);
+  const { id: userId } = decodedToken;
+  const searchQuery = req.body.search_query;
+  if (!searchQuery) {
+    return res.status(400).send('No search query provided');
+  }
+
+  try {
+    // Perform a case-insensitive partial search
+    let user = await User.findById(userId).select('friends');
+    const friendsIds = user.friends.map((friends: any) => friends.toString());
+    let friends = await User.find({
+      _id: { $in: friendsIds },
+      name: { $regex: searchQuery, $options: 'i' },
+    }).select('-password');
+    res.json(friends);
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).send('Error performing search');
   }
 });
 
