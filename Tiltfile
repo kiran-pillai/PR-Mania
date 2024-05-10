@@ -13,6 +13,7 @@ live_update=[
     sync('./fe/src','/app/src'),
     sync('./fe/public','/app/public'),
     sync('./fe/vite.config.ts','/app/vite.config.ts'),
+    sync('./fe/tailwind.config.js','/app/tailwind.config.js'),
     run('npm install', trigger='./fe/package.json'),
 ]
 )

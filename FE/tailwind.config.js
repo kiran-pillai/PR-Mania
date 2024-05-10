@@ -9,12 +9,6 @@ module.exports = {
   ],
   prefix: '',
   theme: {
-    width: {
-      150: '37.5rem', // 600px, an example for smaller screens
-      200: '50rem', // Assuming you mean 800px if using Tailwind's default scale
-      250: '62.5rem', // 1000px, an example for larger screens
-      300: '75rem', // 1200px, another example
-    },
     container: {
       center: true,
       padding: '2rem',

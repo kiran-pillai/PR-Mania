@@ -10,7 +10,7 @@ const ChatSearchbar = () => {
     <>
       <div className="flex items-center border-b">
         <Label className="mr-5">To: </Label>
-        <MagnifyingGlassIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+        <MagnifyingGlassIcon className="mr-1 h-4 w-4 shrink-0 opacity-50" />
         <Input placeholder="Search..." onChange={handleOnInputChange} />
       </div>
 

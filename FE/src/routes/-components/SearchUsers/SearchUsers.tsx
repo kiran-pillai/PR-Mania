@@ -34,8 +34,8 @@ const SearchUsers = () => {
   const commandInputRef = useRef<any>(null);
 
   return (
-    <div className="flex ml-4 space-x-2 items-center">
-      <Command className="relative overflow-y-visible overflow-x-visible">
+    <div className="flex ml-4 space-x-2 items-center w-full">
+      <Command className="relative overflow-y-visible overflow-x-visible w-1/3">
         <CommandInput
           placeholder="Search Users..."
           onInput={handleOnInputChange}
@@ -43,7 +43,7 @@ const SearchUsers = () => {
             setReferenceElement(_ref);
             commandInputRef.current = _ref;
           }}
-          className="w-full sm:w-100 md:w-150 lg:w-150"
+          className="w-full"
           onClick={() => setOpen(true)}
         />
         {open && (
