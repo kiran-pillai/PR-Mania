@@ -4,7 +4,7 @@ import { MutedText } from '@/components/ui/mutedText';
 import { useAppContext } from '@/context/appContext';
 import { MessageCircleMore } from 'lucide-react';
 
-const ChatPlaceholder = () => {
+const ChatInitialPlaceholder = () => {
   const { setNewChatModalOpen } = useAppContext();
   return (
     <div className="flex flex-col justify-center items-center w-full">
@@ -18,4 +18,4 @@ const ChatPlaceholder = () => {
   );
 };
 
-export default ChatPlaceholder;
+export default ChatInitialPlaceholder;

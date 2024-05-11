@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import '../Chat.css';
-import SideChatBar from './SideChatBar/SideCharBar';
-import ChatPlaceholder from '../ChatPlaceholder';
+import SideChatBar from './SideChatBar/SideChatbar';
+import ChatPlaceholder from './ChatInitialPlaceholder';
+import { useRouterState } from '@tanstack/react-router';
 
 function Chat() {
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const webSocket = useRef<any>(null);
+  const location = useRouterState()?.location?.pathname;
   useEffect(() => {
     let refreshToken = localStorage.getItem('refreshToken');
     // Define the WebSocket connection
@@ -40,9 +42,11 @@ function Chat() {
   return (
     <div className="flex w-full">
       <SideChatBar />
-      <div className="flex justify-center items-center w-full">
-        <ChatPlaceholder />
-      </div>
+      {location === '/chat' && (
+        <div className="flex justify-center items-center w-full">
+          <ChatPlaceholder />
+        </div>
+      )}
     </div>
     // <div className="flex flex-col w-full h-full justify-center items-center">
     //   <div className="flex flex-row w-full justify-center items-center gap-x-3 mb-5">

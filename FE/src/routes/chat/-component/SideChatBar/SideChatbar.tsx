@@ -1,12 +1,12 @@
 import { useTheme } from '@/components/theme-provider';
 import { getBorderColor } from '@/utils/tailwindUtils';
-import NewChat from '../NewChat/NewChat';
+import NewChatModal from '../NewChat/NewChatModal';
 
 const SideChatBar = () => {
   const { theme } = useTheme();
   return (
     <div className="flex-col" style={{ borderRight: getBorderColor(theme) }}>
-      <NewChat />
+      <NewChatModal />
       <div className="flex mt-2">
         <strong>Messages</strong>
       </div>
