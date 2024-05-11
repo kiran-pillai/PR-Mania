@@ -12,6 +12,7 @@ const Sidebar = (props: SidebarProps) => {
   const { userIsAuthenticated } = useAuthContext();
   const { theme } = useTheme();
 
+  console.log('theme', theme);
   return (
     <>
       {userIsAuthenticated ? (
