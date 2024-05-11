@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import '../Chat.css';
-import { Button } from '@/components/ui/button';
 import SideChatBar from './SideChatBar/SideCharBar';
+import ChatPlaceholder from '../ChatPlaceholder';
 
 function Chat() {
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const webSocket = useRef<any>(null);
-
   useEffect(() => {
     let refreshToken = localStorage.getItem('refreshToken');
     // Define the WebSocket connection
@@ -39,7 +38,12 @@ function Chat() {
     }
   };
   return (
-    <SideChatBar />
+    <div className="flex w-full">
+      <SideChatBar />
+      <div className="flex justify-center items-center w-full">
+        <ChatPlaceholder />
+      </div>
+    </div>
     // <div className="flex flex-col w-full h-full justify-center items-center">
     //   <div className="flex flex-row w-full justify-center items-center gap-x-3 mb-5">
     //     <input
