@@ -28,9 +28,9 @@ export const AppContextProvider = ({
   const [newChatModalOpen, setNewChatModalOpen] = useState(false);
   const { data: friendsListData, isLoading: friendsListIsLoading } = useQuery({
     queryKey: ['friendsList'],
-    staleTime: 5,
+    staleTime: Infinity,
     queryFn: async () => {
-      const response = await fetchWithCredentials('getFriendsList');
+      const response = await fetchWithCredentials('getFriendsListIds');
       return response;
     },
     placeholderData: {},
