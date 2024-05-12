@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 import '../Chat.css';
 import SideChatBar from './SideChatBar/SideChatbar';
 import ChatPlaceholder from './ChatInitialPlaceholder';
-import { useRouterState } from '@tanstack/react-router';
+import { useSearch } from '@tanstack/react-router';
+import NewChat from './NewChat/NewChat';
 
 function Chat() {
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const webSocket = useRef<any>(null);
-  const location = useRouterState()?.location?.pathname;
+  const params: any = useSearch({ from: '/chat' });
   useEffect(() => {
     let refreshToken = localStorage.getItem('refreshToken');
     // Define the WebSocket connection
@@ -42,40 +43,14 @@ function Chat() {
   return (
     <div className="flex w-full">
       <SideChatBar />
-      {location === '/chat' && (
+      {!params?.new ? (
         <div className="flex justify-center items-center w-full">
           <ChatPlaceholder />
         </div>
+      ) : (
+        <NewChat />
       )}
     </div>
-    // <div className="flex flex-col w-full h-full justify-center items-center">
-    //   <div className="flex flex-row w-full justify-center items-center gap-x-3 mb-5">
-    //     <input
-    //       onChange={({ currentTarget: { value } }) => setInput(value)}
-    //       value={input}
-    //       onKeyDown={({ key }) => key === 'Enter' && sendMessage()}
-    //       className="text-black h-9"
-    //     />
-    //     <Button onClick={sendMessage}>Send Message</Button>
-    //   </div>
-    //   {messages?.length > 0 && (
-    //     <>
-    //       <em>Messages:</em>
-    //       <div className="p-8 border border-white max-h-[500px] overflow-y-scroll">
-    //         {messages.map((message) => (
-    //           <div key={message} className="flex mt-3 normal">
-    //             <div className="mr-7">Client:</div>
-    //             <div
-    //               style={{
-    //                 width: '350px',
-    //                 textAlign: 'left',
-    //               }}>{`${message}`}</div>
-    //           </div>
-    //         ))}
-    //       </div>
-    //     </>
-    //   )}
-    // </div>
   );
 }
 

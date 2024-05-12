@@ -1,6 +1,6 @@
 import { useTheme } from '@/components/theme-provider';
 import { getBorderColor } from '@/utils/tailwindUtils';
-import NewChatModal from '../NewChat/NewChatModal';
+import NewChatModal from '../NewChatModal/NewChatModal';
 
 const SideChatBar = () => {
   const { theme } = useTheme();

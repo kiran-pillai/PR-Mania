@@ -3,12 +3,26 @@ import { useSearchUsers } from '@/routes/-components/SearchUsers/hooks/useSearch
 import NewChatRecipientSearchResults from './NewChatRecipientSearchResults';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { Label } from '@/components/ui/label';
-import { Autocomplete } from '@/components/ui/autocomplete';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from '@tanstack/react-router';
+import { useAppContext } from '@/context/appContext';
 
 const NewChatRecepientSearch = () => {
   const { handleOnInputChange, userData: friendsSearchResults } =
     useSearchUsers('searchFriends');
+  const navigate = useNavigate();
+  const { newChatRecipients, setNewChatModalOpen } = useAppContext();
+  const handleStartNewChat = () => {
+    //check to see if the user is already in a chat with the selected user(s)
+    //if they are, grab chat id and redirect to chat
+    //if they are not, create a new chat and redirect to chat with /new?user_id=123&user_id=456
+
+    setNewChatModalOpen(false);
+    navigate({
+      to: '/chat',
+      search: { new: true, user_id: newChatRecipients.map((user) => user._id) },
+    });
+  };
   return (
     <div className="h-full flex-col">
       <div className="flex items-center border-b">
@@ -24,8 +38,9 @@ const NewChatRecepientSearch = () => {
         )}
       </div>
       <Button
-        disabled={!friendsSearchResults?.length}
-        className="w-full mt-auto p-3">
+        disabled={!newChatRecipients?.length}
+        className="w-full mt-auto p-3"
+        onClick={handleStartNewChat}>
         Chat
       </Button>
     </div>
