@@ -33,7 +33,7 @@ const NewChatRecepientSearch = () => {
 
         <div className={`flex flex-wrap items-center w-full`}>
           <NewChatSelectedReceptients />
-          <div className="flex items-center w-40">
+          <div className="flex items-center w-50">
             <MagnifyingGlassIcon className="mr-1 h-4 w-4 shrink-0 opacity-50" />
             <Input
               className="w-full"
