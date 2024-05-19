@@ -1,30 +1,34 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useSearch } from '@tanstack/react-router';
 import { useEffect } from 'react';
-
+import NewChatHeader from './NewChatHeader';
+import { SendHorizonal } from 'lucide-react';
 const NewChat = () => {
   const params: any = useSearch({ from: '/chat' });
 
   useEffect(() => {}, [params]);
 
-  //
-
   return (
-    <div className="flex flex-col w-full h-full justify-center items-center">
+    <div
+      style={{ height: '94%' }}
+      className="flex flex-col w-full justify-between ">
+      <NewChatHeader />
+      <div className="w-full h-full ml-5">Chat History</div>
       <div className="flex flex-row w-full justify-center items-center gap-x-3 mb-5">
-        <input
-          // onChange={({ currentTarget: { value } }) => setInput(value)}
-          // value={input}
-          // onKeyDown={({ key }) => key === 'Enter' && sendMessage()}
-          className="text-black h-9"
+        <Input
+          className="mx-5"
+          style={{ border: 'solid rgb(54, 54, 54)', borderRadius: '10px' }}
         />
         <Button
-        //   onClick={sendMessage}
+          variant={'outline'}
+          //   onClick={sendMessage}
         >
-          Send Message
+          <SendHorizonal className="mr-3 h-4 w-4" />
+          Send
         </Button>
       </div>
-      {/* {messages?.length > 0 && (
+      {/* {messages?.length > 0 && (t
         <>
           <em>Messages:</em>
           <div className="p-8 border border-white max-h-[500px] overflow-y-scroll">

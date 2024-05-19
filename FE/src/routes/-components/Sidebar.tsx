@@ -12,17 +12,13 @@ const Sidebar = (props: SidebarProps) => {
   const { userIsAuthenticated } = useAuthContext();
   const { theme } = useTheme();
 
-  console.log('theme', theme);
+  const borderColor = getBorderColor(theme);
   return (
     <>
       {userIsAuthenticated ? (
         <div className="flex h-screen">
           <div
-            className={`flex flex-col space-y-4 gap-y-10 p-8 ${updateBgColor(theme)} navbar justify border-t-2}`}
-            style={{
-              borderTop: getBorderColor(theme),
-              borderRight: getBorderColor(theme),
-            }}>
+            className={`flex flex-col space-y-4 gap-y-10 p-8 ${updateBgColor(theme)} navbar justify border-r ${borderColor} border-t ${borderColor}`}>
             <Link to="/chat">
               <MessageSquareMore />
             </Link>
