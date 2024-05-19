@@ -7,12 +7,13 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from '@tanstack/react-router';
 import { useAppContext } from '@/context/appContext';
 import NewChatSelectedReceptients from '../NewChatSelectedRecepients/NewChatSelectedRecepients';
-import { useRef } from 'react';
+import {} from 'react';
 const NewChatRecepientSearch = () => {
+  const handleInputChange = () => {};
   const { handleOnInputChange, userData: friendsSearchResults } =
     useSearchUsers('searchFriends');
   const navigate = useNavigate();
-  const selectedRecepientsRef = useRef(null);
+
   const { newChatRecipients, setNewChatModalOpen } = useAppContext();
   const handleStartNewChat = () => {
     //check to see if the user is already in a chat with the selected user(s)
@@ -29,11 +30,17 @@ const NewChatRecepientSearch = () => {
     <div className="h-full flex-col">
       <div className="flex items-center border-b">
         <Label className="mr-5">To: </Label>
-        <MagnifyingGlassIcon className="mr-1 h-4 w-4 shrink-0 opacity-50" />
 
-        <div className="flex flex-wrap items-center">
-          <NewChatSelectedReceptients containerRef={selectedRecepientsRef} />
-          <Input placeholder={'Search...'} onChange={handleOnInputChange} />
+        <div className={`flex flex-wrap items-center w-full`}>
+          <NewChatSelectedReceptients />
+          <div className="flex items-center w-40">
+            <MagnifyingGlassIcon className="mr-1 h-4 w-4 shrink-0 opacity-50" />
+            <Input
+              className="w-full"
+              placeholder={'Search...'}
+              onChange={handleOnInputChange}
+            />
+          </div>
         </div>
       </div>
       <div className="overflow-y-auto p-2 mt-2 h-5/6 mt-4">
