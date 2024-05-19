@@ -10,12 +10,8 @@ import NewChatRecepientSearch from './NewChatRecipientSearch';
 import { DialogTrigger } from '@radix-ui/react-dialog';
 
 const NewChatModal = () => {
-  const {
-    setNewChatModalOpen,
-    newChatModalOpen,
-    setNewChatRecipients,
-    newChatRecipients,
-  } = useAppContext();
+  const { setNewChatModalOpen, newChatModalOpen, setNewChatRecipients } =
+    useAppContext();
   const handleOnOpenChange = (isOpen: boolean) => {
     setNewChatModalOpen(isOpen);
     if (!isOpen) {
