@@ -3,12 +3,13 @@ import { Label } from '@/components/ui/label';
 import { FriendData, useAppContext } from '@/context/appContext';
 import { useEffect, useState } from 'react';
 
-interface ChatSearchResultsProps {
-  friends: FriendData[];
+interface ChatSearchResultProps {
+  friend: FriendData;
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const NewChatSearchResult = (props: any) => {
-  const { friend } = props;
+const NewChatSearchResult = (props: ChatSearchResultProps) => {
+  const { friend, setInputValue } = props;
   const { setNewChatRecipients, newChatRecipients } = useAppContext();
   const isCheckedFunc = (friend: FriendData) => {
     return Boolean(
@@ -21,12 +22,9 @@ const NewChatSearchResult = (props: any) => {
     setIsChecked(isCheckedFunc(friend));
   }, [newChatRecipients]);
 
-  const handleCheckboxChange = (checked: boolean, friend: FriendData) => {
-    checked
-      ? setNewChatRecipients((prevState) => [...prevState, friend])
-      : setNewChatRecipients((prevState) =>
-          prevState?.filter((_friend) => friend?._id !== _friend?._id)
-        );
+  const handleCheckboxChange = (friend: FriendData) => {
+    setNewChatRecipients((prevState) => [...prevState, friend]);
+    setInputValue('');
   };
 
   return (
@@ -35,9 +33,7 @@ const NewChatSearchResult = (props: any) => {
         {friend?.name}
       </Label>
       <Checkbox
-        onCheckedChange={(checked: boolean) =>
-          handleCheckboxChange(checked, friend)
-        }
+        onCheckedChange={() => handleCheckboxChange(friend)}
         checked={isChecked}
         className="ml-auto"
         id={friend?._id}
@@ -46,16 +42,4 @@ const NewChatSearchResult = (props: any) => {
   );
 };
 
-const NewChatRecipientSearchResults = (props: ChatSearchResultsProps) => {
-  const { friends } = props;
-
-  return (
-    <div className="flex-col space-y-5">
-      {friends?.map((friend: any) => (
-        <NewChatSearchResult key={friend._id} friend={friend} />
-      ))}
-    </div>
-  );
-};
-
-export default NewChatRecipientSearchResults;
+export default NewChatSearchResult;

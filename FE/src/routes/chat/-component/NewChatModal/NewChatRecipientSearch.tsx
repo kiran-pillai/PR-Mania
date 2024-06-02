@@ -1,30 +1,41 @@
 import { Input } from '@/components/ui/input';
 import { useSearchUsers } from '@/routes/-components/SearchUsers/hooks/useSearchUsers';
-import NewChatRecipientSearchResults from './NewChatRecipientSearchResults';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from '@tanstack/react-router';
 import { useAppContext } from '@/context/appContext';
 import NewChatSelectedReceptients from '../NewChatSelectedRecepients/NewChatSelectedRecepients';
-import {} from 'react';
+import { useState } from 'react';
+import NewChatSearchResult from './NewChatRecipientSearchResults';
 const NewChatRecepientSearch = () => {
-  const handleInputChange = () => {};
-  const { handleOnInputChange, userData: friendsSearchResults } =
-    useSearchUsers('searchFriends');
+  const { setNewChatRecipients } = useAppContext();
+  const [value, setValue] = useState<string>('');
+  const {
+    handleOnInputChange: handleSearchChange,
+    userData: friendsSearchResults,
+  } = useSearchUsers('searchFriends');
   const navigate = useNavigate();
+  const handleInputChange = (e: any) => {
+    setValue(e.target.value);
+    handleSearchChange(e);
+  };
+  const clearSearch = () => {
+    setValue('');
+    handleSearchChange({ target: { value: '' } });
+  };
 
   const { newChatRecipients, setNewChatModalOpen } = useAppContext();
   const handleStartNewChat = () => {
     //check to see if the user is already in a chat with the selected user(s)
     //if they are, grab chat id and redirect to chat
     //if they are not, create a new chat and redirect to chat with /new?user_id=123&user_id=456
-
     setNewChatModalOpen(false);
     navigate({
       to: '/chat',
       search: { new: true, user_id: newChatRecipients.map((user) => user._id) },
     });
+    setNewChatRecipients([]);
   };
   return (
     <div className="h-full flex-col">
@@ -38,14 +49,23 @@ const NewChatRecepientSearch = () => {
             <Input
               className="w-full"
               placeholder={'Search...'}
-              onChange={handleOnInputChange}
+              onChange={handleInputChange}
+              value={value}
             />
           </div>
         </div>
       </div>
       <div className="overflow-y-auto p-2 mt-2 h-5/6 mt-4">
         {friendsSearchResults?.length > 0 ? (
-          <NewChatRecipientSearchResults friends={friendsSearchResults} />
+          <div className="flex-col space-y-5">
+            {friendsSearchResults?.map((friend: any) => (
+              <NewChatSearchResult
+                key={friend._id}
+                friend={friend}
+                setInputValue={clearSearch}
+              />
+            ))}
+          </div>
         ) : (
           <div className="flex justify-center">No users found</div>
         )}
