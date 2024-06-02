@@ -15,6 +15,7 @@ const mapUrls: any = {
   addFriend: '/friends/add',
   removeFriend: '/friends/remove',
   searchFriends: '/friends/search',
+  getUsers: '/users',
 };
 
 export const urlToURI = (endpoint: string) => {

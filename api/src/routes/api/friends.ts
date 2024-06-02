@@ -119,7 +119,6 @@ router.delete('/remove', async (req, res) => {
       { new: true, safe: true, upsert: false }
     );
 
-    console.log('userUpdate:', userUpdate);
     // Execute both updates concurrently
     await Promise.all([userUpdate, friendUpdate]);
 
