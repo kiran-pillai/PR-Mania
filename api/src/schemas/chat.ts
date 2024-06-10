@@ -1,24 +1,14 @@
 import { Schema, Document } from 'mongoose';
 export interface IChat extends Document {
-  email: string;
-  password: string;
-  name: string;
+  participants: Schema.Types.ObjectId[];
+  isGroupChat: boolean;
+  createdAt: Date;
+  chatName?: string;
 }
 
 export const chatSchema = new Schema<IChat>({
-  name: { type: String, required: true },
-  email: {
-    type: String,
-    required: true,
-    lowercase: true,
-    unique: true,
-    trim: true,
-    validate: {
-      validator: function (v: string) {
-        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
-      },
-      message: (props: any) => `${props.value} is not a valid email!`,
-    },
-  },
-  password: { type: String, required: true, minlength: 6 },
+  participants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  chatName: { type: String },
+  isGroupChat: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
 });

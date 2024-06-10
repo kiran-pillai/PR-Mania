@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { User } from '../../models/models';
+import { User } from '../../../models/models';
 import jwt from 'jsonwebtoken';
-import { decodeToken } from '../../utils/utils';
+import { decodeToken } from '../../../utils/utils';
 
 const router = Router();
 

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import auth from './api/auth';
-import searchUsers from './api/searchUsers';
-import friends from './api/friends';
-import users from './api/users';
+import searchUsers from './api/users/searchUsers';
+import friends from './api/users/friends';
+import users from './api/users/users';
 const router = Router();
 
 router.use('/auth', auth);

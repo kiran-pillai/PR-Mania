@@ -17,10 +17,10 @@ export function openWS(s: Server) {
   wss.on('connection', (ws, req) => {
     ws.on('error', (err) => console.error('POST UPGRADE ERROR', err));
     ws.on('message', (msg, isBinary) => {
-      console.log('received message', msg?.toString());
       wss.clients.forEach((client) => {
         //ws!==client -> don't send to person who sent
         if (client.readyState === WebSocket.OPEN) {
+          console.log('received message', msg?.toString());
           client.send(msg, { binary: isBinary });
         }
       });

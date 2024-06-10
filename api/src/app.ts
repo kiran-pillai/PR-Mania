@@ -1,5 +1,4 @@
 import express from 'express';
-import { WebSocketServer, WebSocket } from 'ws';
 import { connectToMongo } from './middleware/db';
 import routes from './routes/index';
 import cors from 'cors';
