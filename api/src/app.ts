@@ -4,7 +4,7 @@ import routes from './routes/index';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { requireAuth } from './middleware/requireAuth';
-import { openWS } from './routes/websocket/chat';
+import { openWSA } from './routes/websocket/chat';
 
 dotenv.config();
 let app = express();
@@ -26,4 +26,4 @@ connectToMongo();
 
 const s = app.listen(port, async () => {});
 app.use('/', routes);
-openWS(s);
+openWSA(s);

@@ -1,6 +1,41 @@
 import { Server } from 'http';
 import { WebSocket, WebSocketServer } from 'ws';
 import { requireAuthSocket } from '../../middleware/requireAuth';
+import { Server as ServerIO } from 'socket.io';
+
+export function openWSA(s: Server) {
+  const io = new ServerIO(s, {
+    cors: {
+      origin: '*', // Adjust according to your needs for security
+    },
+  });
+
+  io.use((socket: any, next: any) => {
+    const token = socket?.handshake?.auth?.token;
+    try {
+      requireAuthSocket(token);
+      next();
+    } catch (err) {
+      next(new Error('Authentication error'));
+    }
+  });
+
+  io.on('connection', (socket: any) => {
+    console.log('A user connected SOCKET.IO');
+
+    socket.on('error', (err: any) => console.error('Socket.IO Error', err));
+
+    socket.on('message', (msg: any) => {
+      console.log('received message', msg);
+      io.emit('message', msg); // Broadcast to all clients
+      // socket.broadcast.emit('message', msg); // Broadcast to all clients except the sender
+    });
+
+    socket.on('disconnect', () => {
+      console.log('A user disconnected');
+    });
+  });
+}
 
 export function openWS(s: Server) {
   const wss = new WebSocketServer({ noServer: true });

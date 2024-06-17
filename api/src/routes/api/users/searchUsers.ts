@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { User } from '../../models/models';
-import { decodeToken } from '../../utils/utils';
-
+import { decodeToken } from '../../../utils/utils';
+import { User } from '../../../models/models';
 const router = Router();
 
 router.post('/', async (req, res) => {
