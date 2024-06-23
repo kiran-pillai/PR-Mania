@@ -4,6 +4,7 @@ import TopBar from './Topbar';
 import Sidebar from './Sidebar';
 import { useAuthContext } from '@/context/authContext';
 import { useEffect } from 'react';
+import { Toaster } from '@/components/ui/sonner';
 const Layout = () => {
   const { userIsAuthenticated } = useAuthContext();
   const navigate = useNavigate();
@@ -13,6 +14,11 @@ const Layout = () => {
   }, [userIsAuthenticated]);
   return (
     <>
+      <Toaster
+        position="top-right"
+        richColors
+        toastOptions={{ duration: 4000 }}
+      />
       <div className="flex flex-col">
         <TopBar />
         <Sidebar>
