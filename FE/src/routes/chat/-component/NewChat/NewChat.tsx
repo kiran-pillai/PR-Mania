@@ -6,12 +6,13 @@ import NewChatHeader from './NewChatHeader';
 import { SendHorizonal } from 'lucide-react';
 
 import { useWebSocket } from '../hooks/useWebSocket';
+import { urlToURI } from '@/urlHandler';
 
 const NewChat = () => {
   const params: any = useSearch({ from: '/chat' });
   const [input, setInput] = useState('');
   const { webSocket, socketIsConnected, messages } = useWebSocket(
-    'ws://localhost:8000',
+    urlToURI('base', 'ws'),
     []
   );
   useEffect(() => {}, [params]);

@@ -8,8 +8,10 @@ import { useAppContext } from '@/context/appContext';
 import NewChatSelectedReceptients from '../NewChatSelectedRecepients/NewChatSelectedRecepients';
 import { useState } from 'react';
 import NewChatSearchResult from './NewChatRecipientSearchResults';
+import { useFetchWithCredentials } from '@/urlHandler';
 const NewChatRecepientSearch = () => {
   const { setNewChatRecipients } = useAppContext();
+  const fetchWithCredentials = useFetchWithCredentials();
   const [value, setValue] = useState<string>('');
   const {
     handleOnInputChange: handleSearchChange,
@@ -26,16 +28,50 @@ const NewChatRecepientSearch = () => {
   };
 
   const { newChatRecipients, setNewChatModalOpen } = useAppContext();
-  const handleStartNewChat = () => {
+  const handleStartNewChat = async () => {
     //check to see if the user is already in a chat with the selected user(s)
     //if they are, grab chat id and redirect to chat
-    //if they are not, create a new chat and redirect to chat with /new?user_id=123&user_id=456
-    setNewChatModalOpen(false);
-    navigate({
-      to: '/chat',
-      search: { new: true, user_id: newChatRecipients.map((user) => user._id) },
-    });
-    setNewChatRecipients([]);
+    //if they are not, create a new chat and redirect to chat with chat_id
+    try {
+      let res = await fetchWithCredentials('chatExists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          users: newChatRecipients.map((user) => user._id),
+        }),
+      });
+      // Create new chat if chat does not exist
+      if (res?.status === 404) {
+        let resNewChat = await fetchWithCredentials('chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            users: newChatRecipients.map((user) => user._id),
+          }),
+        });
+        if (!resNewChat?.ok) {
+          //@ts-ignore
+          throw {
+            res: resNewChat,
+            error: new Error('error creating new chat'),
+          };
+        }
+        navigate({ to: '/chat', search: { chat_id: resNewChat?._id } });
+      }
+      if (!res?.ok && res?.status !== 404) {
+        throw { res, error: new Error('error checking if chat exists') };
+      }
+      // Chat exists, navigate to chat
+      navigate({ to: '/chat', search: { chat_id: res?.data?._id } });
+      setNewChatModalOpen(false);
+      setNewChatRecipients([]);
+    } catch (e) {
+      console.log(e);
+    }
   };
   return (
     <div className="h-full flex-col">

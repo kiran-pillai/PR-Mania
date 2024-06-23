@@ -14,14 +14,16 @@ const NewChatHeader = () => {
 
   const { data: usersData, isLoading } = useQuery({
     queryKey: ['getUsers', searchParams?.user_id],
-    queryFn: async () =>
-      await fetchWithCredentials('getUsers', {
+    queryFn: async () => {
+      const res = await fetchWithCredentials('getUsers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ users: searchParams?.user_id }),
-      }),
+      });
+      return res?.data;
+    },
   });
 
   return (

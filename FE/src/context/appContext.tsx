@@ -42,7 +42,7 @@ export const AppContextProvider = ({
     staleTime: Infinity,
     queryFn: async () => {
       const response = await fetchWithCredentials('getFriendsListIds');
-      return response;
+      return response?.data;
     },
     placeholderData: {},
   });

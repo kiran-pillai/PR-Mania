@@ -15,6 +15,7 @@ import logo from '../../../assets/pr_mania.png';
 import { useAuthContext } from '@/context/authContext';
 import { decodeJwtPayload, urlToURI } from '@/urlHandler';
 import { useNavigate } from '@tanstack/react-router';
+import { toast } from 'sonner';
 
 const Login = () => {
   const [type, toggle] = useToggle(['Login', 'Register']);
@@ -67,8 +68,13 @@ const Login = () => {
         setUserInfo(userInfo);
         setUserIsAuthenticated(true);
         navigate({ to: '/chat' });
+      } else {
+        throw new Error('error with login');
       }
     } catch (error) {
+      form.setError('email', { message: 'Invalid login credentials' });
+      form.setError('password', { message: 'Invalid login credentials' });
+      toast.error('Invalid login credentials please try again');
       console.error('error with login', error);
     }
   };

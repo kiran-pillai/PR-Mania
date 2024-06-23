@@ -12,19 +12,19 @@ export const useSearchUsers = (url: string) => {
   const handleOnInputChange = (e: any) => {
     debouncedSearchText(e.target.value);
   };
-  const fetchWithCrenderials = useFetchWithCredentials();
+  const fetchWithCredentials = useFetchWithCredentials();
   const { data: userData, isLoading } = useQuery({
     queryKey: ['userSearch', searchText],
     queryFn: async () => {
       if (searchText) {
-        const response = await fetchWithCrenderials(url, {
+        const response = await fetchWithCredentials(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ search_query: searchText }),
         });
-        return response;
+        return response?.data;
       }
       return null;
     },

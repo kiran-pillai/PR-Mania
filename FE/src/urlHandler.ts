@@ -16,6 +16,8 @@ const mapUrls: any = {
   removeFriend: '/friends/remove',
   searchFriends: '/friends/search',
   getUsers: '/users',
+  chat: '/chat',
+  chatExists: '/chat/check_exists',
 };
 
 export const urlToURI = (endpoint: string, protocol?: string) => {
@@ -89,14 +91,14 @@ async function fetchWithCredentials(
   try {
     let response = await fetch(urlToURI(url), { ...config });
     if (!response.ok) {
-      const error: any = new Error('error with fetch');
-      error.response = response;
+      const error: any = response;
       throw error;
     }
     setUserisAuthenticated(true);
-    return await responseParseCallback(response);
+    const data = await responseParseCallback(response);
+    return { data, status: response.status, ok: response.ok };
   } catch (error: any) {
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       const isRefreshSuccesful = await refreshTokenCallback(token);
       return isRefreshSuccesful
         ? //if refresh is successful, retry fetch
@@ -110,7 +112,8 @@ async function fetchWithCredentials(
         : //if refresh is not successful, redirect to login
           setUserisAuthenticated(false);
     }
-    console.error('error with fetch', error.response);
+    console.error('error with fetch', error);
+    return error;
   }
 }
 

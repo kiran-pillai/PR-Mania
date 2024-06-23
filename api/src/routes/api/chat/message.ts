@@ -50,3 +50,5 @@ router.get('/:chatId', async (req, res) => {
     return res.status(500).send('Error fetching chat');
   }
 });
+
+export default router;

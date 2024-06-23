@@ -23,7 +23,7 @@ export const useManageFriendMutation = () => {
           },
         }
       );
-      return res;
+      return res?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['friendsList'] });
