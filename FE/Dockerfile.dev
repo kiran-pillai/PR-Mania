@@ -3,14 +3,12 @@ WORKDIR /app
 
 ARG CACHE_BUST
 
-RUN echo $CACHE_BUST > /dev/null
+RUN echo "$CACHE_BUST" > /dev/null
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY . .
 
 RUN npm install
 
-COPY . .
 
 ENV PORT=3000
 

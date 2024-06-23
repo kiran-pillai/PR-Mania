@@ -1,6 +1,6 @@
 import { useAuthContext } from './context/authContext';
-
-const API = 'http://localhost:8000';
+const API = `${import.meta.env.VITE_API_URL}`;
+const WS = `${import.meta.env.VITE_WS_URL}`;
 
 const AUTH = '/auth';
 const mapUrls: any = {
@@ -18,8 +18,8 @@ const mapUrls: any = {
   getUsers: '/users',
 };
 
-export const urlToURI = (endpoint: string) => {
-  return `${API}${mapUrls[endpoint]}`;
+export const urlToURI = (endpoint: string, protocol?: string) => {
+  return `${protocol === 'ws' ? WS : API}${mapUrls[endpoint]}`;
 };
 
 export function decodeJwtPayload(jwt: string) {

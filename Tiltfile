@@ -2,6 +2,7 @@ docker_compose("docker-compose.yml")
 
 
 docker_build('pr_mania-api','api',
+dockerfile='./api/Dockerfile.dev',
 live_update=[
     sync('./api/src','/api/src'),
     run('npm install', trigger='./api/package.json'),
@@ -9,6 +10,7 @@ live_update=[
 ])
 
 docker_build('pr_mania-ui','fe',
+dockerfile='./fe/Dockerfile.dev',
 live_update=[
     sync('./fe/src','/app/src'),
     sync('./fe/public','/app/public'),
