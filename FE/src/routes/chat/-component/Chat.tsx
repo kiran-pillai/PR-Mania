@@ -6,13 +6,12 @@ import { useSearch } from '@tanstack/react-router';
 import NewChat from './NewChat/NewChat';
 
 function Chat() {
-
   const params: any = useSearch({ from: '/chat' });
-
+  console.log(params);
   return (
     <div className="flex w-full">
       <SideChatBar />
-      {!params?.new ? (
+      {!params?.chat_id ? (
         <div className="flex justify-center items-center w-full">
           <ChatPlaceholder />
         </div>

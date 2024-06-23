@@ -87,9 +87,11 @@ async function fetchWithCredentials(
     ...(config.headers && { ...config.headers }),
     Authorization: `Bearer ${token}`,
   };
-
+  let finalUrl: string = urlToURI(url).includes('undefined')
+    ? url
+    : urlToURI(url);
   try {
-    let response = await fetch(urlToURI(url), { ...config });
+    let response = await fetch(finalUrl, { ...config });
     if (!response.ok) {
       const error: any = response;
       throw error;

@@ -1,4 +1,5 @@
 import { useTheme } from '@/components/theme-provider';
+import { useAppContext } from '@/context/appContext';
 import { useFetchWithCredentials } from '@/urlHandler';
 import { getBorderColor } from '@/utils/tailwindUtils';
 import { getAvatarInitials } from '@/utils/utils';
@@ -11,21 +12,19 @@ const NewChatHeader = () => {
   const chatApi = getRouteApi('/chat');
   const fetchWithCredentials = useFetchWithCredentials();
   const searchParams: any = chatApi.useSearch();
-
   const { data: usersData, isLoading } = useQuery({
-    queryKey: ['getUsers', searchParams?.user_id],
+    queryKey: ['getUsers', searchParams?.chat_id],
     queryFn: async () => {
-      const res = await fetchWithCredentials('getUsers', {
-        method: 'POST',
+      const url =
+        import.meta.env.VITE_API_URL + '/chat/' + searchParams?.chat_id;
+      const res = await fetchWithCredentials(url, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ users: searchParams?.user_id }),
       });
       return res?.data;
     },
   });
-
   return (
     !isLoading && (
       <div
