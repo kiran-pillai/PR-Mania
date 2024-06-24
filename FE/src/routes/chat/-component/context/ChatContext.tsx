@@ -63,6 +63,7 @@ export const ChatContextProvider = ({
   const { data: chatData, isLoading: chatDataIsLoading } = useQuery({
     queryKey: ['chatMessages', searchParams?.chat_id],
     queryFn: async () => {
+      if (!searchParams?.chat_id) return;
       const url =
         import.meta.env.VITE_API_URL + '/message/' + searchParams?.chat_id;
       const res = await fetchWithCredentials(url, {

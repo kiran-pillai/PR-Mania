@@ -19,7 +19,6 @@ const NewChat = () => {
   );
   // https://www.instagram.com/direct/t/103057784427575/
   // https://www.instagram.com/direct/t/103057784427575/
-
   useEffect(() => {}, [params]);
   const sendMessage = () => {
     if (socketIsConnected) {
@@ -38,7 +37,6 @@ const NewChat = () => {
       className="flex flex-col w-full justify-between ">
       <NewChatHeader />
       <div className="w-full h-full ml-5">
-        {' '}
         {messages?.length > 0 && (
           <>
             <em>Messages:</em>

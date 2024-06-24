@@ -61,7 +61,6 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/check_exists', async (req, res) => {
-  console.log('check-exists hit');
   let userIds: string[] = req?.body?.users;
   const decodedToken = decodeToken(req);
   const { id: sendingUserId } = decodedToken;

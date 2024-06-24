@@ -32,7 +32,7 @@ const NewChatRecepientSearch = () => {
   const handleStartNewChat = async () => {
     //check to see if the user is already in a chat with the selected user(s)
     //if they are, grab chat id and redirect to chat
-    //if they are not, create a new chat and redirect to chat with chat_id
+    //if they are not, create a new chat and redirect to chat with created chat_id
     try {
       let res = await fetchWithCredentials('chatExists', {
         method: 'POST',
@@ -71,7 +71,7 @@ const NewChatRecepientSearch = () => {
       setNewChatModalOpen(false);
       setNewChatRecipients([]);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   return (
