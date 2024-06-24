@@ -1,7 +1,7 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { FriendData, useAppContext } from '@/context/appContext';
 import { useEffect, useState } from 'react';
+import { FriendData, useChatContext } from '../context/ChatContext';
 
 interface ChatSearchResultProps {
   friend: FriendData;
@@ -10,7 +10,7 @@ interface ChatSearchResultProps {
 
 const NewChatSearchResult = (props: ChatSearchResultProps) => {
   const { friend, setInputValue } = props;
-  const { setNewChatRecipients, newChatRecipients } = useAppContext();
+  const { setNewChatRecipients, newChatRecipients } = useChatContext();
   const isCheckedFunc = (friend: FriendData) => {
     return Boolean(
       newChatRecipients?.find((_friend) => friend?._id === _friend?._id)

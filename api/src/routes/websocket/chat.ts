@@ -29,7 +29,7 @@ export function openWSA(s: Server) {
       const message = msg?.message;
       const chat_id = msg?.chat_id;
       io.emit('message', message); // Broadcast to all clients
-      let res = await fetch('http://localhost:8000/message/', {
+      await fetch('http://localhost:8000/message/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

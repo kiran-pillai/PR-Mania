@@ -9,8 +9,10 @@ import NewChatSelectedReceptients from '../NewChatSelectedRecepients/NewChatSele
 import { useState } from 'react';
 import NewChatSearchResult from './NewChatRecipientSearchResults';
 import { useFetchWithCredentials } from '@/urlHandler';
+import { useChatContext } from '../context/ChatContext';
 const NewChatRecepientSearch = () => {
-  const { setNewChatRecipients } = useAppContext();
+  const { setNewChatRecipients, newChatRecipients, setNewChatModalOpen } =
+    useChatContext();
   const fetchWithCredentials = useFetchWithCredentials();
   const [value, setValue] = useState<string>('');
   const {
@@ -27,7 +29,6 @@ const NewChatRecepientSearch = () => {
     handleSearchChange({ target: { value: '' } });
   };
 
-  const { newChatRecipients, setNewChatModalOpen } = useAppContext();
   const handleStartNewChat = async () => {
     //check to see if the user is already in a chat with the selected user(s)
     //if they are, grab chat id and redirect to chat

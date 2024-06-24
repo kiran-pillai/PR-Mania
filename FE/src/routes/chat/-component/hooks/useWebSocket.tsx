@@ -9,7 +9,6 @@ export const useWebSocket = (
   const [messages, setMessages] = useState<any[]>(messageHistory);
   const wsRef = useRef<any>();
   const [socketIsConnected, setIsSocketConnected] = useState(false);
-
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     wsRef.current = io(url, {
@@ -21,7 +20,7 @@ export const useWebSocket = (
       setIsSocketConnected(wsRef?.current?.connected);
     });
     wsRef?.current?.on('message', (msg: any) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
+      setMessages((prevMessages) => [...prevMessages, { content: msg }]);
     });
     wsRef?.current?.on('disconnect', () => {
       setIsSocketConnected(wsRef?.current?.socket?.connected);

@@ -47,7 +47,7 @@ router.get('/:chatId', async (req, res) => {
     let usersPromises: Promise<any>[] = [];
     for (const userId of chat.participants) {
       if (userId?.toString() === sendingUserId) continue;
-      let user = User.findById(userId);
+      let user = User.findById(userId).select('-password -friends');
       usersPromises.push(user);
     }
     let users: any = await Promise.allSettled(usersPromises);

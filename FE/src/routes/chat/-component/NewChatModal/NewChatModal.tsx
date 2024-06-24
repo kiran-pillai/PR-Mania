@@ -5,13 +5,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { SquarePen } from 'lucide-react';
-import { useAppContext } from '@/context/appContext';
 import NewChatRecepientSearch from './NewChatRecipientSearch';
 import { DialogTrigger } from '@radix-ui/react-dialog';
+import { useChatContext } from '../context/ChatContext';
 
 const NewChatModal = () => {
   const { setNewChatModalOpen, newChatModalOpen, setNewChatRecipients } =
-    useAppContext();
+    useChatContext();
   const handleOnOpenChange = (isOpen: boolean) => {
     setNewChatModalOpen(isOpen);
     if (!isOpen) {

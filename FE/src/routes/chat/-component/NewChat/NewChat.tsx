@@ -7,13 +7,15 @@ import { SendHorizonal } from 'lucide-react';
 
 import { useWebSocket } from '../hooks/useWebSocket';
 import { urlToURI } from '@/urlHandler';
+import { useChatContext } from '../context/ChatContext';
 
 const NewChat = () => {
   const params: any = useSearch({ from: '/chat' });
+  const { chatData } = useChatContext();
   const [input, setInput] = useState('');
   const { webSocket, socketIsConnected, messages } = useWebSocket(
     urlToURI('base', 'ws'),
-    []
+    chatData?.messages
   );
   // https://www.instagram.com/direct/t/103057784427575/
   // https://www.instagram.com/direct/t/103057784427575/
@@ -48,7 +50,7 @@ const NewChat = () => {
                     style={{
                       width: '350px',
                       textAlign: 'left',
-                    }}>{`${message}`}</div>
+                    }}>{`${message?.content}`}</div>
                 </div>
               ))}
             </div>
