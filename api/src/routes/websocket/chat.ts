@@ -1,5 +1,4 @@
 import { Server } from 'http';
-import { WebSocket, WebSocketServer } from 'ws';
 import { requireAuthSocket } from '../../middleware/requireAuth';
 import { Server as ServerIO } from 'socket.io';
 
@@ -25,9 +24,22 @@ export function openWSA(s: Server) {
 
     socket.on('error', (err: any) => console.error('Socket.IO Error', err));
 
-    socket.on('message', (msg: any) => {
-      console.log('received message', msg);
-      io.emit('message', msg); // Broadcast to all clients
+    socket.on('message', async (msg: any, options: any) => {
+      const accessToken = socket?.handshake?.auth?.token;
+      const message = msg?.message;
+      const chat_id = msg?.chat_id;
+      io.emit('message', message); // Broadcast to all clients
+      let res = await fetch('http://localhost:8000/message/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          content: message,
+          chat_id,
+        }),
+      });
       // socket.broadcast.emit('message', msg); // Broadcast to all clients except the sender
     });
 
@@ -35,32 +47,4 @@ export function openWSA(s: Server) {
       console.log('A user disconnected');
     });
   });
-}
-
-export function openWS(s: Server) {
-  const wss = new WebSocketServer({ noServer: true });
-
-  s.on('upgrade', (req: any, socket, head) => {
-    let token = decodeURIComponent(req.url?.split('=')?.[1])?.split(' ')[1];
-    requireAuthSocket(token);
-    socket.on('error', (err) => console.error('preupgrade ERROR', err));
-    wss.handleUpgrade(req, socket, head, (ws) => {
-      wss.emit('connection', ws, req);
-    });
-  });
-
-  wss.on('connection', (ws, req) => {
-    ws.on('error', (err) => console.error('POST UPGRADE ERROR', err));
-    ws.on('message', (msg, isBinary) => {
-      wss.clients.forEach((client) => {
-        //ws!==client -> don't send to person who sent
-        if (client.readyState === WebSocket.OPEN) {
-          console.log('received message', msg?.toString());
-          client.send(msg, { binary: isBinary });
-        }
-      });
-    });
-  });
-
-  wss.on('close', () => console.log('Connection closed'));
 }

@@ -11,9 +11,9 @@ export const useWebSocket = (
   const [socketIsConnected, setIsSocketConnected] = useState(false);
 
   useEffect(() => {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = localStorage.getItem('accessToken');
     wsRef.current = io(url, {
-      auth: { token: refreshToken },
+      auth: { token: accessToken },
       ...(options && { ...options }),
     });
     wsRef?.current?.on('connect', () => {

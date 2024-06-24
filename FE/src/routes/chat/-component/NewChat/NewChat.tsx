@@ -15,11 +15,16 @@ const NewChat = () => {
     urlToURI('base', 'ws'),
     []
   );
-  useEffect(() => {}, [params]);
+  // https://www.instagram.com/direct/t/103057784427575/
+  // https://www.instagram.com/direct/t/103057784427575/
 
+  useEffect(() => {}, [params]);
   const sendMessage = () => {
     if (socketIsConnected) {
-      webSocket?.emit('message', input);
+      webSocket?.emit('message', {
+        message: input,
+        chat_id: params?.chat_id,
+      });
       setInput('');
     } else {
       console.log('WebSocket not connected');

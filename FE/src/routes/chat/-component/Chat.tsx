@@ -7,7 +7,6 @@ import NewChat from './NewChat/NewChat';
 
 function Chat() {
   const params: any = useSearch({ from: '/chat' });
-  console.log(params);
   return (
     <div className="flex w-full">
       <SideChatBar />

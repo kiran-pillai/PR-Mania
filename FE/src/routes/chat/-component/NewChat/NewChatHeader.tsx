@@ -13,10 +13,10 @@ const NewChatHeader = () => {
   const fetchWithCredentials = useFetchWithCredentials();
   const searchParams: any = chatApi.useSearch();
   const { data: usersData, isLoading } = useQuery({
-    queryKey: ['getUsers', searchParams?.chat_id],
+    queryKey: ['chatMessages', searchParams?.chat_id],
     queryFn: async () => {
       const url =
-        import.meta.env.VITE_API_URL + '/chat/' + searchParams?.chat_id;
+        import.meta.env.VITE_API_URL + '/message/' + searchParams?.chat_id;
       const res = await fetchWithCredentials(url, {
         headers: {
           'Content-Type': 'application/json',
@@ -29,17 +29,17 @@ const NewChatHeader = () => {
     !isLoading && (
       <div
         className={`text-lg font-semibold border-b ${getBorderColor(theme)} p-3`}>
-        {usersData?.length === 1 && (
+        {usersData?.users?.length === 1 && (
           <Avatar color="white" className="mr-5 border-white">
             <AvatarFallback>
-              {getAvatarInitials(usersData?.[0]?.name)}
+              {getAvatarInitials(usersData?.users?.[0]?.name)}
             </AvatarFallback>
           </Avatar>
         )}
 
-        {usersData?.length === 1
-          ? usersData?.[0]?.name
-          : usersData.map((user: any) => user.name).join(', ')}
+        {usersData?.users?.length === 1
+          ? usersData?.users?.[0]?.name
+          : usersData?.users?.map((user: any) => user.name).join(', ')}
       </div>
     )
   );
