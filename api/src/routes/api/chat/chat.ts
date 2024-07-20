@@ -2,8 +2,6 @@ import { Router } from 'express';
 import { Chat, User } from '../../../models/models';
 import { decodeToken } from '../../../utils/utils';
 
-const router = Router();
-
 const validateUsers = async (
   sendingUserId: string,
   userIds: string[],
@@ -18,6 +16,64 @@ const validateUsers = async (
   return usersList;
 };
 
+const router = Router();
+
+router.post('/', async (req, res) => {
+  let userIds = req?.body?.users;
+  let isGroupChat = req?.body?.users?.length > 1;
+  const decodedToken = decodeToken(req);
+  const { id: sendingUserId } = decodedToken;
+  if (!userIds?.length) {
+    return res.status(400).send('No users provided');
+  }
+
+  try {
+    const usersList = await validateUsers(sendingUserId, userIds, res);
+    const chat = await Chat.create({ participants: usersList, isGroupChat });
+    return res.status(201).json(chat);
+  } catch (err) {
+    return res.status(500).send(`Error creating chat ${err}`);
+  }
+});
+
+router.get('/list', async (req, res) => {
+  const { id: sendingUserId } = decodeToken(req);
+  try {
+    const chats = await Chat.find({
+      participants: { $in: [sendingUserId] },
+    }).populate('participants', '-password -friends');
+    const modifiedChats = chats.map((chat: any) => {
+      const participants = chat.participants.filter(
+        (p: any) => p._id.toString() !== sendingUserId
+      );
+      return { ...chat._doc, participants };
+    });
+
+    return res.status(200).json(modifiedChats);
+  } catch (error) {
+    console.error('Error fetching chats:', error);
+    return res.status(500).send('Error fetching chats');
+  }
+});
+
+router.post('/check_exists', async (req, res) => {
+  let userIds: string[] = req?.body?.users;
+  const decodedToken = decodeToken(req);
+  const { id: sendingUserId } = decodedToken;
+  if (!userIds?.length) {
+    return res.status(400).send('No users provided');
+  }
+  try {
+    const usersList = await validateUsers(sendingUserId, userIds, res);
+    const chat = await Chat.findOne({ participants: { $all: usersList } });
+    if (!chat) {
+      return res.status(404).send('Chat not found');
+    }
+    return res.status(200).json(chat);
+  } catch (err) {
+    return res.status(500).send(`Error fetching chat ${err}`);
+  }
+});
 router.get('/:chat_id', async (req, res) => {
   let { chat_id } = req.params;
   const { id: sendingUserId } = decodeToken(req);
@@ -39,43 +95,6 @@ router.get('/:chat_id', async (req, res) => {
     return res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching chat:', error);
-  }
-});
-
-router.post('/', async (req, res) => {
-  let userIds = req?.body?.users;
-  let isGroupChat = req?.body?.users?.length > 1;
-  const decodedToken = decodeToken(req);
-  const { id: sendingUserId } = decodedToken;
-  if (!userIds?.length) {
-    return res.status(400).send('No users provided');
-  }
-
-  try {
-    const usersList = await validateUsers(sendingUserId, userIds, res);
-    const chat = await Chat.create({ participants: usersList, isGroupChat });
-    return res.status(201).json(chat);
-  } catch (err) {
-    return res.status(500).send(`Error creating chat ${err}`);
-  }
-});
-
-router.post('/check_exists', async (req, res) => {
-  let userIds: string[] = req?.body?.users;
-  const decodedToken = decodeToken(req);
-  const { id: sendingUserId } = decodedToken;
-  if (!userIds?.length) {
-    return res.status(400).send('No users provided');
-  }
-  try {
-    const usersList = await validateUsers(sendingUserId, userIds, res);
-    const chat = await Chat.findOne({ participants: { $all: usersList } });
-    if (!chat) {
-      return res.status(404).send('Chat not found');
-    }
-    return res.status(200).json(chat);
-  } catch (err) {
-    return res.status(500).send(`Error fetching chat ${err}`);
   }
 });
 

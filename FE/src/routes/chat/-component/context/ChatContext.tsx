@@ -37,6 +37,8 @@ interface ChatContextValues {
   setNewChatRecipients: React.Dispatch<React.SetStateAction<FriendData[]>>;
   chatData: ChatData;
   chatDataIsLoading: boolean;
+  allChatsData: any;
+  allChatsDataIsLoading: boolean;
 }
 const ChatContext = createContext<ChatContextValues | undefined>(undefined);
 
@@ -74,6 +76,19 @@ export const ChatContextProvider = ({
       return res?.data;
     },
   });
+
+  const { data: allChatsData, isLoading: allChatsDataIsLoading } = useQuery({
+    queryKey: ['allChats'],
+    queryFn: async () => {
+      const res = await fetchWithCredentials('allChats', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return res?.data;
+    },
+  });
+
   const values = useMemo(
     () => ({
       setNewChatModalOpen,
@@ -82,6 +97,8 @@ export const ChatContextProvider = ({
       newChatModalOpen,
       chatData,
       chatDataIsLoading,
+      allChatsData,
+      allChatsDataIsLoading,
     }),
     [
       setNewChatModalOpen,
@@ -90,6 +107,8 @@ export const ChatContextProvider = ({
       newChatModalOpen,
       chatData,
       chatDataIsLoading,
+      allChatsData,
+      allChatsDataIsLoading,
     ]
   );
 

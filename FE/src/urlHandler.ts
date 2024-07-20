@@ -18,6 +18,7 @@ const mapUrls: any = {
   getUsers: '/users',
   chat: '/chat',
   chatExists: '/chat/check_exists',
+  allChats: '/chat/list',
 };
 
 export const urlToURI = (endpoint: string, protocol?: string) => {

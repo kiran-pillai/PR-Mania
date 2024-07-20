@@ -4,11 +4,12 @@ import { io } from 'socket.io-client';
 export const useWebSocket = (
   url: string,
   messageHistory: any[],
+  sender: string,
   options?: any
 ) => {
   const [messages, setMessages] = useState<any[]>(messageHistory);
   const wsRef = useRef<any>();
-  const [socketIsConnected, setIsSocketConnected] = useState(false);
+  const [socketIsConnected, setSocketIsConnected] = useState(false);
   useEffect(() => {
     setMessages(messageHistory);
   }, [messageHistory]);
@@ -22,17 +23,20 @@ export const useWebSocket = (
       });
       wsRef?.current?.on('connect', () => {
         console.log('socket.io WebSocket Connected', wsRef?.current?.connected);
-        setIsSocketConnected(wsRef?.current?.connected);
+        setSocketIsConnected(wsRef?.current?.connected);
       });
       wsRef?.current?.on('message', (msg: any) => {
-        setMessages((prevMessages) => [...prevMessages, { content: msg }]);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { content: msg, sender: sender },
+        ]);
       });
       wsRef?.current?.on('disconnect', () => {
-        setIsSocketConnected(wsRef?.current?.socket?.connected);
+        setSocketIsConnected(wsRef?.current?.socket?.connected);
       });
       return () => {
         wsRef?.current?.close();
-        setIsSocketConnected(false);
+        setSocketIsConnected(false);
       };
     }
   }, [url, options]);
