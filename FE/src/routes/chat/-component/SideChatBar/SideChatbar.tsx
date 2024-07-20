@@ -10,8 +10,8 @@ const SideChatBar = () => {
   return (
     <div className="flex-col" style={{ borderRight: getBorderColor(theme) }}>
       <NewChatModal />
-      <div className="flex-col mt-2 p-4">
-        <strong className="mb-4">Messages</strong>
+      <div className="flex-col mt-2">
+        <strong className="ml-2">Messages</strong>
         <div className="flex-col mt-4">
           {allChatsData?.map((chat: any) => (
             <ChatParticipant key={chat?._id} chat={chat} />

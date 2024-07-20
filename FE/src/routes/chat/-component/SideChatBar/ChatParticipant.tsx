@@ -18,10 +18,13 @@ function ChatParticipant(props: ChatParticipantProps) {
       onClick={onNavigate}
       variant={'ghost'}
       key={chat?._id}
-      className="mb-4 cursor-pointer">
-      {chat?.participants?.length > 1
-        ? chat.participants.join(', ')
-        : chat.participants[0].name}
+      style={{ width: '100%', height: '50px' }}
+      className="cursor-pointer">
+      <div className="mr-auto">
+        {chat?.participants?.length > 1
+          ? chat.participants.join(', ')
+          : chat.participants[0].name}
+      </div>
     </Button>
   );
 }
