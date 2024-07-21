@@ -37,7 +37,7 @@ const SearchUsers = () => {
     <div className="flex ml-4 space-x-2 items-center w-full">
       <Command className="relative overflow-y-visible overflow-x-visible w-1/3">
         <CommandInput
-          placeholder="Search Users..."
+          placeholder="Search and Add Users..."
           onInput={handleOnInputChange}
           ref={(_ref) => {
             setReferenceElement(_ref);
