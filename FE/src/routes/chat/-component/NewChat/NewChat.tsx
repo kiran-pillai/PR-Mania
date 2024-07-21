@@ -9,6 +9,9 @@ import { useWebSocket } from '../hooks/useWebSocket';
 import { urlToURI } from '@/urlHandler';
 import { useChatContext } from '../context/ChatContext';
 import { useAuthContext } from '@/context/authContext';
+import { Avatar } from '@/components/ui/avatar';
+import { AvatarFallback } from '@radix-ui/react-avatar';
+import { getAvatarInitials } from '@/utils/utils';
 
 const ChatInput = (props: any) => {
   const { setInput, sendMessage, input } = props;
@@ -47,6 +50,10 @@ const NewChat = () => {
       console.log('WebSocket not connected');
     }
   };
+  const findUserName = (id: string) => {
+    return chatData?.users?.find((user) => user._id === id)?.name ?? '';
+  };
+
   return (
     <div
       style={{ height: '94%' }}
@@ -55,12 +62,23 @@ const NewChat = () => {
       <div className="h-full ml-5">
         {messages?.length > 0 && (
           <div className="p-8 max-h-[500px] overflow-y-scroll">
-            {messages.map((message) => {
+            {messages.map((message: any) => {
               const isUser = message?.sender === userInfo?.id;
               return (
-                <div key={message} className="flex mt-3 normal">
+                <div key={message} className="flex mt-3">
+                  {chatData?.is_group_chat && !isUser && (
+                    <Avatar
+                      color="white"
+                      className="mr-2 border-2 border-white p-1.5">
+                      <AvatarFallback>
+                        {getAvatarInitials(
+                          findUserName(message?.sender as string)
+                        )}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
                   <div
-                    className={`w-350px p-2 ${isUser ? 'ml-auto text-right bg-[#3797F0]' : 'text-left bg-gray-500'} rounded-2xl`}>
+                    className={`max-w-[600px] p-2 ${isUser ? 'ml-auto text-right bg-[#3797F0]' : 'text-left bg-gray-500'} rounded-3xl`}>
                     {message?.content}
                   </div>
                 </div>

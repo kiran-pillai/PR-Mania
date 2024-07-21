@@ -28,6 +28,7 @@ export interface ChatMessageUserData {
 interface ChatData {
   messages: ChatMessageData[];
   users: ChatMessageUserData[];
+  is_group_chat: boolean;
 }
 
 interface ChatContextValues {

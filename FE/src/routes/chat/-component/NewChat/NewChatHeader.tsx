@@ -12,7 +12,7 @@ const NewChatHeader = () => {
       <div
         className={`text-lg font-semibold border-b ${getBorderColor(theme)} p-3`}>
         {chatData?.users?.length === 1 && (
-          <Avatar color="white" className="mr-5 border-white">
+          <Avatar color="white" className="mr-5 ">
             <AvatarFallback>
               {getAvatarInitials(chatData?.users?.[0]?.name)}
             </AvatarFallback>

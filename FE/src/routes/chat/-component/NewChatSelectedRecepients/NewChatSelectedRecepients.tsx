@@ -1,8 +1,7 @@
 import { BadgeRemovable } from '@/components/ui/badge';
-import { FriendData, useAppContext } from '@/context/appContext';
-
+import { FriendData, useChatContext } from '../context/ChatContext';
 const NewChatSelectedReceptients = () => {
-  const { newChatRecipients, setNewChatRecipients } = useAppContext();
+  const { newChatRecipients, setNewChatRecipients } = useChatContext();
   const handleOnclose = (recipient: FriendData) => {
     setNewChatRecipients((prevState) =>
       prevState?.filter((_friend) => recipient?._id !== _friend?._id)

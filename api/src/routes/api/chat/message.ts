@@ -55,7 +55,9 @@ router.get('/:chatId', async (req, res) => {
       .filter((user: any) => user?.status === 'fulfilled')
       ?.map((user: any) => user?.value);
     const messages = await Message.find({ chat: chatId });
-    return res.status(200).json({ messages, users });
+    return res
+      .status(200)
+      .json({ messages, users, is_group_chat: chat.isGroupChat });
   } catch (error) {
     console.error('Error fetching chat:', error);
     return res.status(500).send('Error fetching chat');
