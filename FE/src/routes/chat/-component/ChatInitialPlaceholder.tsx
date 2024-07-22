@@ -3,9 +3,10 @@ import { LargeText } from '@/components/ui/largeText';
 import { MutedText } from '@/components/ui/mutedText';
 import { useAppContext } from '@/context/appContext';
 import { MessageCircleMore } from 'lucide-react';
+import { useChatContext } from './context/ChatContext';
 
 const ChatInitialPlaceholder = () => {
-  const { setNewChatModalOpen } = useAppContext();
+  const { setNewChatModalOpen } = useChatContext();
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <MessageCircleMore size={60} />
