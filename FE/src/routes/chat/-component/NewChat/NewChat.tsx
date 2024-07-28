@@ -60,7 +60,7 @@ const NewChat = () => {
       <NewChatHeader />
       <div className="h-full ml-5">
         {messages?.length > 0 && (
-          <div className="p-8 max-h-[500px] overflow-y-scroll">
+          <div className="p-8 overflow-y-scroll h-full">
             {messages.map((message: any) => {
               const isUser = message?.sender === userInfo?.id;
               return (

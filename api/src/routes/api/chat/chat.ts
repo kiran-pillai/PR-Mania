@@ -55,6 +55,7 @@ router.get('/list', async (req, res) => {
         chat: { $in: [modifiedChat?._id] },
       });
       if (messages.length > 0) {
+        modifiedChat.last_message = messages[messages.length - 1];
         activeChats.push(modifiedChat);
       }
     }
