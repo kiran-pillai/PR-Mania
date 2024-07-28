@@ -53,7 +53,6 @@ const NewChat = () => {
   const findUserName = (id: string) => {
     return chatData?.users?.find((user) => user._id === id)?.name ?? '';
   };
-
   return (
     <div
       style={{ height: '94%' }}
@@ -65,7 +64,7 @@ const NewChat = () => {
             {messages.map((message: any) => {
               const isUser = message?.sender === userInfo?.id;
               return (
-                <div key={message} className="flex mt-3">
+                <div key={message?._id} className="flex mt-3">
                   {chatData?.is_group_chat && !isUser && (
                     <Avatar
                       color="white"

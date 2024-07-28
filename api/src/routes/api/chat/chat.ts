@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Chat, User } from '../../../models/models';
+import { Chat, Message, User } from '../../../models/models';
 import { decodeToken } from '../../../utils/utils';
 
 const validateUsers = async (
@@ -42,14 +42,24 @@ router.get('/list', async (req, res) => {
     const chats = await Chat.find({
       participants: { $in: [sendingUserId] },
     }).populate('participants', '-password -friends');
-    const modifiedChats = chats.map((chat: any) => {
+
+    const modifiedChats: any = chats.map((chat: any) => {
       const participants = chat.participants.filter(
         (p: any) => p._id.toString() !== sendingUserId
       );
       return { ...chat._doc, participants };
     });
+    const activeChats = [];
+    for (const modifiedChat of modifiedChats) {
+      const messages = await Message.find({
+        chat: { $in: [modifiedChat?._id] },
+      });
+      if (messages.length > 0) {
+        activeChats.push(modifiedChat);
+      }
+    }
 
-    return res.status(200).json(modifiedChats);
+    return res.status(200).json(activeChats);
   } catch (error) {
     console.error('Error fetching chats:', error);
     return res.status(500).send('Error fetching chats');
@@ -65,7 +75,9 @@ router.post('/check_exists', async (req, res) => {
   }
   try {
     const usersList = await validateUsers(sendingUserId, userIds, res);
-    const chat = await Chat.findOne({ participants: { $all: usersList } });
+    const chat = await Chat.findOne({
+      participants: { $all: usersList, $size: usersList.length },
+    });
     if (!chat) {
       return res.status(404).send('Chat not found');
     }

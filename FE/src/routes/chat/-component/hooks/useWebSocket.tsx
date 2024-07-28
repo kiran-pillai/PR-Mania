@@ -32,9 +32,11 @@ export const useWebSocket = (
         ]);
       });
       wsRef?.current?.on('disconnect', () => {
+        console.log('socket.io WebSocket Disconnected');
         setSocketIsConnected(wsRef?.current?.socket?.connected);
       });
       return () => {
+        console.log('socket.io WebSocket Disconnected, hit useEffect cleanup');
         wsRef?.current?.close();
         setSocketIsConnected(false);
       };
