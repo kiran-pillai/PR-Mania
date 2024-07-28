@@ -38,7 +38,9 @@ const NewChat = () => {
   );
   // https://www.instagram.com/direct/t/103057784427575/
   // https://www.instagram.com/direct/t/103057784427575/
-  useEffect(() => {}, [params]);
+  useEffect(() => {
+    setInput('');
+  }, [params]);
   const sendMessage = () => {
     if (socketIsConnected) {
       webSocket?.emit('message', {
@@ -54,9 +56,7 @@ const NewChat = () => {
     return chatData?.users?.find((user) => user._id === id)?.name ?? '';
   };
   return (
-    <div
-      style={{ height: '94%' }}
-      className="flex flex-col w-full justify-between ">
+    <div className="flex flex-col w-full justify-between sticky top-0 z-10">
       <NewChatHeader />
       <div className="h-full ml-5">
         {messages?.length > 0 && (
@@ -77,7 +77,7 @@ const NewChat = () => {
                     </Avatar>
                   )}
                   <div
-                    className={`max-w-[600px] p-2 ${isUser ? 'ml-auto text-right bg-[#3797F0]' : 'text-left bg-gray-500'} rounded-3xl`}>
+                    className={`max-w-[600px] py-2.5 px-3 text-sm ${isUser ? 'ml-auto text-left bg-[#3797F0]' : 'text-left bg-gray-700'} rounded-3xl`}>
                     {message?.content}
                   </div>
                 </div>
@@ -86,7 +86,7 @@ const NewChat = () => {
           </div>
         )}
       </div>
-      <div className="flex flex-row w-full justify-center items-center  mb-5">
+      <div className="flex flex-row w-full justify-center items-center sticky bottom-0 bg-black z-10">
         <ChatInput
           setInput={setInput}
           sendMessage={sendMessage}

@@ -26,13 +26,13 @@ function ChatParticipant(props: ChatParticipantProps) {
       style={{ width: '100%', height: '50px' }}
       className={`flex items-center cursor-pointer ${params?.chat_id === chat?._id ? 'bg-accent' : ''}`}>
       <div className="flex flex-col items-start text-left w-full">
-        <div>
+        <p>
           {chat?.participants?.length > 1
             ? chat.participants
                 .map((participant: any) => participant.name)
                 .join(', ')
             : chat.participants[0].name}
-        </div>
+        </p>
         <p className="text-xs text-muted-foreground">
           {trimLastMessage(chat?.last_message?.content)}
         </p>
