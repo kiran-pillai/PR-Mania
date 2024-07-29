@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 
@@ -7,6 +8,7 @@ export const useWebSocket = (
   sender: string,
   options?: any
 ) => {
+  const queryClient = useQueryClient();
   const [messages, setMessages] = useState<any[]>(messageHistory);
   const wsRef = useRef<any>();
   const [socketIsConnected, setSocketIsConnected] = useState(false);
@@ -30,6 +32,7 @@ export const useWebSocket = (
           ...prevMessages,
           { content: msg, sender: sender },
         ]);
+        queryClient.invalidateQueries({ queryKey: ['allChats'] });
       });
       wsRef?.current?.on('disconnect', () => {
         console.log('socket.io WebSocket Disconnected');

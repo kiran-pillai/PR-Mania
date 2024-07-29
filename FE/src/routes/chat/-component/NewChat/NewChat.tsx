@@ -56,7 +56,7 @@ const NewChat = () => {
     return chatData?.users?.find((user) => user._id === id)?.name ?? '';
   };
   return (
-    <div className="flex flex-col w-full justify-between sticky top-0 z-10">
+    <div className="flex flex-col w-full justify-between sticky top-0 z-3">
       <NewChatHeader />
       <div className="h-full ml-5">
         {messages?.length > 0 && (

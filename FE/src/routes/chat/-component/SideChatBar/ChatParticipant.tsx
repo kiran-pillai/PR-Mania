@@ -1,22 +1,27 @@
 import { Button } from '@/components/ui/button';
+import { useAuthContext } from '@/context/authContext';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-
+import { cloneDeep } from 'lodash';
 interface ChatParticipantProps {
   chat: any;
 }
 
 function ChatParticipant(props: ChatParticipantProps) {
   const { chat } = props;
+  const { userInfo } = useAuthContext();
   const navigate = useNavigate();
   const params: any = useSearch({ from: '/chat' });
   const onNavigate = () => {
     navigate({ to: `/chat`, search: { chat_id: chat?._id } });
   };
-  const trimLastMessage = (message: string) => {
-    if (message.length > 50) {
-      return message.slice(0, 50) + '...';
+  const trimLastMessage = (message: any) => {
+    const clonedMessage = cloneDeep(message);
+    if (clonedMessage?.sender === userInfo?.id)
+      clonedMessage.content = 'You: ' + clonedMessage.content;
+    if (clonedMessage?.content?.length > 50) {
+      return clonedMessage.content.slice(0, 50) + '...';
     }
-    return message;
+    return clonedMessage?.content;
   };
   return (
     <Button
@@ -34,7 +39,7 @@ function ChatParticipant(props: ChatParticipantProps) {
             : chat.participants[0].name}
         </p>
         <p className="text-xs text-muted-foreground">
-          {trimLastMessage(chat?.last_message?.content)}
+          {trimLastMessage(chat?.last_message)}
         </p>
       </div>
     </Button>
